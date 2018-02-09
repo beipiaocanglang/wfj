@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
+"http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+
+
+<mapper namespace="com.wdzsj.mgr.dao.acl.OrgDao">
+
+	<resultMap id="Org" type="com.wdzsj.mgr.entity.acl.Org">
+        <result property="id" column="id"/>
+        <result property="parId" column="par_id"/>
+        <result property="name" column="name"/>
+        <result property="imag" column="imag"/>
+        <result property="seq" column="seq"/>
+        <result property="creatTm" column="creat_tm"/>
+        <result property="updtTm" column="updt_tm"/>
+        <result property="enabFlag" column="enab_flag"/>
+	</resultMap>
+	
+	<!-- 用于select查询公用抽取的列 -->
+	<sql id="columns">
+		id,par_id,name,imag,seq,creat_tm,updt_tm,enab_flag
+	</sql>
+
+	
+    <select id="findAll" resultType="json">
+		select a.id,a.par_id as pId,a.name,a.is_parent as isParent,ifnull(b.id,0) as checked, a.id as open
+		    from tacl_org a
+        	left join tacl_org_user b on a.id = b.org_id and b.user_id = #{userId}
+        	order by id
+	</select>
+	
+	<select id="findByParId" resultType="json">
+		select id,par_id as pId,name,is_parent as isParent
+		    from tacl_org 
+		    where par_id = #{parId}
+		    order by id
+	</select>
+	
+
+</mapper>
+

@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	   xmlns="http://www.springframework.org/schema/beans"
+	   xmlns:context="http://www.springframework.org/schema/context"
+	   xmlns:aop="http://www.springframework.org/schema/aop"
+	   xsi:schemaLocation="http://www.springframework.org/schema/beans
+	   					http://www.springframework.org/schema/beans/spring-beans.xsd
+						http://www.springframework.org/schema/context
+						http://www.springframework.org/schema/context/spring-context.xsd
+						http://www.springframework.org/schema/aop
+						http://www.springframework.org/schema/aop/spring-aop.xsd">
+
+	<!-- 引入配置文件  -->
+	<!-- <context:property-placeholder location="classpath:config.properties" /> -->
+	
+	<bean id="configProperties" class="org.springframework.beans.factory.config.PropertiesFactoryBean">
+		<property name="locations">
+			<list>
+				<value>classpath:config.properties</value>
+			</list>
+		</property>
+	</bean>
+	
+	<bean id="propertyConfigurer" class="org.springframework.beans.factory.config.PreferencesPlaceholderConfigurer">
+		<property name="properties" ref="configProperties" />
+	</bean> 
+
+	<!-- 扫描所有spring bean注解 -->
+	<context:component-scan base-package="com.wdzsj.mgr" />
+
+	<!-- 注解解析 -->
+	<context:annotation-config />
+
+	<!-- 动态代理 -->
+	<aop:aspectj-autoproxy/>
+	
+	<!-- 引入数据源配置 -->
+	<import resource="classpath:spring-daf.xml"/>
+	
+	<import resource="classpath:spring-base.xml"/>
+
+	<!-- 引入redis配置-->
+	<import resource="classpath:spring-redis.xml"/>
+	
+</beans>

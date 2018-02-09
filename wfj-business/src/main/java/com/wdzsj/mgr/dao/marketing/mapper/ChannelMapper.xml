@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.wdzsj.mgr.dao.marketing.ChannelDao" >
+  <resultMap id="BaseResultMap" type="com.wdzsj.mgr.entity.marketing.Channel" >
+    <result column="channel_id" property="channelId" jdbcType="BIGINT" />
+    <result column="channel_name" property="channelName" jdbcType="VARCHAR" />
+    <result column="conversion_rate" property="conversionRate" jdbcType="DECIMAL" />
+    <result column="seed_user" property="seedUser" jdbcType="INTEGER" />
+    <result column="release_time" property="releaseTime" jdbcType="DATE" />
+    <result column="release_endTime" property="releaseEndTime" jdbcType="DATE" />
+    <result column="people_no" property="peopleNo" jdbcType="BIGINT" />
+  </resultMap>
+
+  <!--基本属性-->
+  <sql id="Base_Column_List" >
+    channel_id, channel_name, conversion_rate, seed_user, release_time, people_no, release_endTime
+  </sql>
+
+  <!--根据ID查询-->
+  <select id="selectById" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from t_wfj_channel
+    WHERE channel_id = #{channelId,jdbcType=BIGINT}
+  </select>
+
+  <!--编辑渠道页面时  渠道信息回显-->
+  <select id="selectByIds" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from t_wfj_channel
+    <where>
+      channel_id in
+      <foreach collection="array" index="index" item="channelId" open="(" separator="," close=")">
+        #{channelId}
+      </foreach>
+    </where>
+  </select>
+
+  <!--全部插入-->
+  <insert id="insert" useGeneratedKeys="true" keyProperty="channelId" parameterType="com.wdzsj.mgr.entity.marketing.Channel" >
+    insert into t_wfj_channel (channel_id, channel_name, conversion_rate, seed_user, release_time, people_no, release_endTime)
+    values (#{channelId,jdbcType=BIGINT}, #{channelName,jdbcType=VARCHAR}, #{conversionRate,jdbcType=DECIMAL}, 
+      #{seedUser,jdbcType=INTEGER}, #{releaseTime,jdbcType=DATE}, #{releaseEndTime,jdbcType=DATE}, #{peopleNo,jdbcType=BIGINT})
+  </insert>
+
+  <!--动态插入单条-->
+  <insert id="insertSelective" useGeneratedKeys="true" keyProperty="channelId" parameterType="com.wdzsj.mgr.entity.marketing.Channel" >
+    insert into t_wfj_channel
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="channelId != null" >
+        channel_id,
+      </if>
+      <if test="channelName != null" >
+        channel_name,
+      </if>
+      <if test="conversionRate != null" >
+        conversion_rate,
+      </if>
+      <if test="seedUser != null" >
+        seed_user,
+      </if>
+      <if test="releaseTime != null" >
+        release_time,
+      </if>
+      <if test="releaseEndTime != null" >
+        release_endTime,
+      </if>
+      <if test="peopleNo != null" >
+        people_no,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="channelId != null" >
+        #{channelId,jdbcType=BIGINT},
+      </if>
+      <if test="channelName != null" >
+        #{channelName,jdbcType=VARCHAR},
+      </if>
+      <if test="conversionRate != null" >
+        #{conversionRate,jdbcType=DECIMAL},
+      </if>
+      <if test="seedUser != null" >
+        #{seedUser,jdbcType=INTEGER},
+      </if>
+      <if test="releaseTime != null" >
+        #{releaseTime,jdbcType=DATE},
+      </if>
+      <if test="releaseEndTime != null" >
+        #{releaseEndTime,jdbcType=DATE},
+      </if>
+      <if test="peopleNo != null" >
+        #{peopleNo,jdbcType=BIGINT},
+      </if>
+    </trim>
+  </insert>
+
+  <!--动态修改-->
+  <update id="updateSelective" parameterType="com.wdzsj.mgr.entity.marketing.Channel">
+    update t_wfj_channel
+    <set>
+      <if test="channelName != null" >
+        channel_name = #{channelName,jdbcType=VARCHAR},
+      </if>
+      <if test="conversionRate != null" >
+        conversion_rate = #{conversionRate,jdbcType=DECIMAL},
+      </if>
+      <if test="seedUser != null" >
+        seed_user = #{seedUser,jdbcType=INTEGER},
+      </if>
+      <if test="releaseTime != null" >
+        release_time = #{releaseTime,jdbcType=DATE},
+      </if>
+      <if test="releaseEndTime != null" >
+        release_endTime = #{releaseEndTime,jdbcType=DATE},
+      </if>
+      <if test="peopleNo != null" >
+        people_no = #{peopleNo,jdbcType=BIGINT},
+      </if>
+    </set>
+    WHERE channel_id = #{channelId,jdbcType=BIGINT}
+  </update>
+</mapper>

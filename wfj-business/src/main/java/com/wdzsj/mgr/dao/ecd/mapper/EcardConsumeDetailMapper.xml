@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.wdzsj.mgr.dao.ecd.EcardConsumeDetailDao">
+    <resultMap id="BaseResultMap" type="com.wdzsj.mgr.entity.cac.CheckAccount">
+        <result property="id" column="id"/>
+        <result property="appid" column="appid"/>
+        <result property="transid" column="transid"/>
+        <result property="code" column="code"/>
+        <result property="programid" column="programid"/>
+        <result property="num" column="num"/>
+        <result property="product" column="product"/>
+        <result property="transtime" column="transtime"/>
+        <result property="storeid" column="storeid"/>
+        <result property="storename" column="storename"/>
+        <result property="area" column="area"/>
+        <result property="posid" column="posid"/>
+        <result property="origprice" column="origprice"/>
+        <result property="saleprice" column="saleprice"/>
+        <result property="price" column="price"/>
+        <result property="cardnum" column="cardnum"/>
+        <result property="cardamount" column="cardamount"/>
+        <result property="expiretime" column="expiretime"/>
+        <result property="expired" column="expired"/>
+        <result property="cardstatus" column="cardstatus"/>
+        <result property="cardtype" column="cardtype"/>
+        <result property="openid" column="openid"/>
+        <result property="cardid" column="cardid"/>
+        <result property="cardcode" column="cardcode"/>
+    </resultMap>
+
+    <!--电子卡消费明细报表查询的封装pojo-->
+    <resultMap id="ecardConsumeDetailVo" type="com.wdzsj.mgr.entity.ecd.EcardConsumeDetailVo" extends="BaseResultMap">
+        <result property="transPrice" column="transPrice"/>
+        <result property="balance" column="balance"/>
+    </resultMap>
+
+    <sql id="BaseColumns">
+        id,appid,transid,code,programid,num,product,transtime,storeid,storename,area,posid,origprice,saleprice,price,
+        cardnum,cardamount,expiretime,expired,cardstatus,cardtype,openid,cardid,cardcode
+    </sql>
+
+    <sql id="BaseWhere">
+        <where>
+            <if test="phoneNo!=null and phoneNo!=''">
+                phoneNo=${phoneNo}
+            </if>
+            <if test="code!=null and code!=''">
+                code=${code}
+            </if>
+        </where>
+    </sql>
+
+    <!--统计查询-->
+    <select id="count" resultType="int">
+        SELECT
+            count(*)
+        FROM
+            tcac_check_account
+        <include refid="BaseWhere"/>
+    </select>
+
+    <!--电子卡消费明细报表查询首页数据-->
+    <select id="findList" resultMap="ecardConsumeDetailVo">
+        select
+            code,
+            transtime,
+            transid,
+            price as transPrice,
+            price as balance,
+            storename
+        from
+            tcac_check_account
+        <include refid="BaseWhere"/>
+        limit ${offset}, ${pageSize}
+    </select>
+
+    <!--电子卡消费明细报表导出数据-->
+    <select id="findExportExcelList" resultMap="ecardConsumeDetailVo">
+        select
+            code,
+            transtime,
+            transid,
+            price as transPrice,
+            price as balance,
+            storename
+        from
+            tcac_check_account
+        <include refid="BaseWhere"/>
+    </select>
+</mapper>

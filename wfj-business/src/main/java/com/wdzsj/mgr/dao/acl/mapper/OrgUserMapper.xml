@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
+"http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+
+
+<mapper namespace="com.wdzsj.mgr.dao.acl.OrgUserDao">
+
+	<resultMap id="OrgUser" type="com.wdzsj.mgr.entity.acl.OrgUser">
+        <result property="id" column="id"/>
+        <result property="orgId" column="org_id"/>
+        <result property="userId" column="user_id"/>
+        <result property="actUser" column="act_user"/>
+        <result property="creatTm" column="creat_tm"/>
+        <result property="updtTm" column="updt_tm"/>
+        <result property="enabFlag" column="enab_flag"/>
+	</resultMap>
+	
+	<!-- 用于select查询公用抽取的列 -->
+	<sql id="columns">
+		id,org_id,user_id,act_user,creat_tm,updt_tm,enab_flag
+	</sql>
+
+	<insert id="insert" useGeneratedKeys="true" keyProperty="id">
+        insert into tacl_org_user (
+        	id ,
+        	org_id ,
+        	user_id ,
+        	act_user ,
+        	creat_tm ,
+        	updt_tm ,
+        	enab_flag 
+        ) values (
+        	#{id} ,
+        	#{orgId} ,
+        	#{userId} ,
+        	#{actUser} ,
+        	now() ,
+        	now() ,
+        	1 
+        )
+	</insert>
+    
+	<update id="update" >
+        update tacl_org_user set
+	        org_id = #{orgId} ,
+	        user_id = #{userId} ,
+	        act_user = #{actUser} ,
+	        updt_tm = now()  
+        where 
+	        id = #{id} 
+	</update>
+
+    <update id="delete">
+        update tacl_org_user set
+	        updt_tm = now() ,
+	        enab_flag = 0
+        where 
+        	id = #{id}
+    </update>
+    
+    <delete id="deleteByOrgIdAndUserId">
+        delete from tacl_org_user 
+        where 
+        	org_id = #{orgId}
+        	and user_id = #{userId}
+    </delete>
+
+	<delete id="deleteByUserId">
+		delete from tacl_org_user
+		where
+		user_id = #{userId}
+	</delete>
+    
+    <select id="countByOrgIdAndUserId" resultType="Integer">
+        select count(id) 
+        from tacl_org_user
+        where 
+        	org_id = #{orgId}
+        	and user_id = #{userId}
+        	and enab_flag = 1
+    </select>
+    
+    <select id="getById" resultMap="OrgUser">
+		select <include refid="columns" />
+		    from tacl_org_user 
+	        where 
+		        id = #{id} 
+	</select>
+	
+	<select id="findByUserId" resultMap="OrgUser">
+		select <include refid="columns" />
+		    from tacl_org_user 
+	        where 
+		        user_id = #{userId} 
+		        and enab_flag = 1
+	</select>
+
+	<select id="findLeafOrgByUserId" resultType="json">
+		select
+		a.org_id as orgId,
+		b.name
+		from tacl_org_user a
+		left join tacl_org b on b.id = a.org_id
+		where
+		user_id = #{userId}
+		and b.is_parent = 0
+		and a.enab_flag = 1
+	</select>
+</mapper>
+

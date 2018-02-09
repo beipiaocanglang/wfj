@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.wdzsj.mgr.dao.marketing.ActiveTagRelationDao" >
+  <resultMap id="BaseResultMap" type="com.wdzsj.mgr.entity.marketing.ActiveTagRelation" >
+    <result column="act_id" property="actId" jdbcType="BIGINT" />
+    <result column="tag_data_id" property="tagDataId" jdbcType="BIGINT" />
+    <result column="tag_data" property="tagData" />
+    <result column="seed_category_data" property="seedCategoryData" />
+  </resultMap>
+
+  <!--基本属性-->
+  <sql id="Base_Column_List" >
+    act_id, tag_data_id, tag_data, seed_category_data
+  </sql>
+
+  <!--全部插入-->
+  <insert id="insert" parameterType="com.wdzsj.mgr.entity.marketing.ActiveTagRelation" >
+    insert into t_wfj_active_tag_relation (act_id, tag_data_id, tag_data, seed_category_data)
+    values (#{actId,jdbcType=BIGINT}, #{tagDataId,jdbcType=BIGINT}), #{tagData}, #{seedCategoryData})
+  </insert>
+
+  <!--动态插入数据-->
+  <insert id="insertSelective" parameterType="com.wdzsj.mgr.entity.marketing.ActiveTagRelation" >
+    insert into t_wfj_active_tag_relation
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="actId != null" >
+        act_id,
+      </if>
+      <if test="tagDataId != null" >
+        tag_data_id,
+      </if>
+      <if test="tagData != null" >
+        tag_data,
+      </if>
+      <if test="seedCategoryData != null" >
+        seed_category_data,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="actId != null" >
+        #{actId,jdbcType=BIGINT},
+      </if>
+      <if test="tagDataId != null" >
+        #{tagDataId,jdbcType=BIGINT},
+      </if>
+      <if test="tagData != null" >
+        #{tagData},
+      </if>
+      <if test="seedCategoryData != null" >
+        #{seedCategoryData},
+      </if>
+    </trim>
+  </insert>
+
+  <!--根据活动表的ID查询对应数据-->
+  <select id="selectByActId" resultMap="BaseResultMap">
+    SELECT
+    <include refid="Base_Column_List"/>
+    FROM t_wfj_active_tag_relation
+    WHERE act_id = #{actId}
+  </select>
+
+  <!--根据ID动态修改-->
+  <update id="updateByIdSelective" parameterType="com.wdzsj.mgr.entity.marketing.ActiveTagRelation" >
+    update t_wfj_active_tag_relation
+    <set >
+      <if test="tagDataId != null" >
+        tag_data_id = #{tagDataId,jdbcType=BIGINT},
+      </if>
+      <if test="tagData != null" >
+        tag_data = #{tagData},
+      </if>
+      <if test="seedCategoryData != null" >
+        seed_category_data = #{seedCategoryData},
+      </if>
+    </set>
+    WHERE act_id = #{actId}
+  </update>
+</mapper>

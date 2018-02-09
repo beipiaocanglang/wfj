@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.wdzsj.mgr.dao.marketing.TagDataDao" >
+  <resultMap id="BaseResultMap" type="com.wdzsj.mgr.entity.marketing.TagData" >
+    <id column="tag_data_id" property="tagDataId" jdbcType="BIGINT" />
+    <result column="tag_id" property="tagId" jdbcType="BIGINT" />
+    <result column="dictionary_name" property="dictionaryName" jdbcType="VARCHAR" />
+    <result column="dictionary_value" property="dictionaryValue" jdbcType="VARCHAR" />
+    <result column="seq_no" property="seqNo" jdbcType="INTEGER" />
+  </resultMap>
+
+  <!--基本元素-->
+  <sql id="Base_Column_List" >
+    tag_data_id, tag_id, dictionary_name, dictionary_value, seq_no
+  </sql>
+
+  <!--根据主键查询-->
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from t_wfj_tag_data
+    where tag_data_id = #{tagDataId,jdbcType=BIGINT}
+  </select>
+
+  <!--全部插入-->
+  <insert id="insert" parameterType="com.wdzsj.mgr.entity.marketing.TagData" >
+    insert into t_wfj_tag_data (tag_data_id, tag_id, dictionary_name, 
+      dictionary_value, seq_no)
+    values (#{tagDataId,jdbcType=BIGINT}, #{tagId,jdbcType=BIGINT}, #{dictionaryName,jdbcType=VARCHAR}, 
+      #{dictionaryValue,jdbcType=VARCHAR}, #{seqNo,jdbcType=INTEGER})
+  </insert>
+
+  <!--动态插入-->
+  <insert id="insertSelective" parameterType="com.wdzsj.mgr.entity.marketing.TagData" >
+    insert into t_wfj_tag_data
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="tagDataId != null" >
+        tag_data_id,
+      </if>
+      <if test="tagId != null" >
+        tag_id,
+      </if>
+      <if test="dictionaryName != null" >
+        dictionary_name,
+      </if>
+      <if test="dictionaryValue != null" >
+        dictionary_value,
+      </if>
+      <if test="seqNo != null" >
+        seq_no,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="tagDataId != null" >
+        #{tagDataId,jdbcType=BIGINT},
+      </if>
+      <if test="tagId != null" >
+        #{tagId,jdbcType=BIGINT},
+      </if>
+      <if test="dictionaryName != null" >
+        #{dictionaryName,jdbcType=VARCHAR},
+      </if>
+      <if test="dictionaryValue != null" >
+        #{dictionaryValue,jdbcType=VARCHAR},
+      </if>
+      <if test="seqNo != null" >
+        #{seqNo,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+
+  <!--统计查询-->
+  <select id="countByMap" resultType="java.lang.Integer" >
+    select count(*) from t_wfj_tag_data
+  </select>
+
+  <!--根据主键动态更新-->
+  <update id="updateByPrimaryKeySelective" parameterType="com.wdzsj.mgr.entity.marketing.TagData" >
+    update t_wfj_tag_data
+    <set >
+      <if test="tagId != null" >
+        tag_id = #{tagId,jdbcType=BIGINT},
+      </if>
+      <if test="dictionaryName != null" >
+        dictionary_name = #{dictionaryName,jdbcType=VARCHAR},
+      </if>
+      <if test="dictionaryValue != null" >
+        dictionary_value = #{dictionaryValue,jdbcType=VARCHAR},
+      </if>
+      <if test="seqNo != null" >
+        seq_no = #{seqNo,jdbcType=INTEGER},
+      </if>
+    </set>
+    where tag_data_id = #{tagDataId,jdbcType=BIGINT}
+  </update>
+</mapper>

@@ -1,0 +1,186 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <!-- 继承父类 -->
+    <parent>
+        <groupId>wfj</groupId>
+        <artifactId>wfj-parent</artifactId>
+        <version>0.0.1-SNAPSHOT</version>
+        <!-- 设置父类的绝对路径 -->
+        <relativePath>../wfj-parent/pom.xml</relativePath>
+    </parent>
+    
+    <artifactId>wfj-business</artifactId>
+    <packaging>war</packaging>
+    <name>wfj-business</name>
+
+    <dependencies>
+        <dependency>
+            <groupId>wfj</groupId>
+            <artifactId>wfj-cmn</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+        </dependency>
+		
+		<!-- httpclient -->
+		<dependency>
+			<groupId>org.apache.httpcomponents</groupId>
+			<artifactId>httpclient</artifactId>
+			<version>4.3.6</version>
+		</dependency>
+
+		<!-- javax.mail -->
+		<dependency>
+			<groupId>javax.mail</groupId>
+			<artifactId>mail</artifactId>
+			<version>1.4.6</version>
+		</dependency>
+
+		<!-- quartz ：quartz-2.2.3/c3p0-0.9.1.1/slf4j-api-1.6.6 -->
+		<dependency>
+			<groupId>org.quartz-scheduler</groupId>
+			<artifactId>quartz</artifactId>
+			<version>2.3.0</version>
+		</dependency>
+		
+		<!-- xxl-job-core -->
+		<dependency>
+		    <groupId>com.xuxueli</groupId>
+		    <artifactId>xxl-job-core</artifactId>
+		    <version>1.8.2</version>
+		</dependency>
+		
+		<!-- hessian -->
+		<dependency>
+			<groupId>com.caucho</groupId>
+			<artifactId>hessian</artifactId>
+			<version>4.0.38</version>
+		</dependency>
+		
+		<!-- spring-context -->
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-context</artifactId>
+			<version>${spring.version}</version>
+		</dependency>
+		
+		<!-- groovy-all -->
+		<dependency>
+			<groupId>org.codehaus.groovy</groupId>
+			<artifactId>groovy-all</artifactId>
+			<version>2.4.5</version>
+		</dependency>
+
+		<!-- commons-exec -->
+		<dependency>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-exec</artifactId>
+			<version>1.3</version>
+		</dependency>
+		
+		<!-- freemarker -->
+		<dependency>
+			<groupId>org.freemarker</groupId>
+			<artifactId>freemarker</artifactId>
+			<version>2.3.23</version>
+		</dependency>
+		
+		<!-- commons-beanutils -->
+		<dependency>
+			<groupId>commons-beanutils</groupId>
+			<artifactId>commons-beanutils</artifactId>
+			<version>1.9.2</version>
+		</dependency>
+		
+		<!-- postgresql-driver -->
+		<dependency>
+		    <groupId>postgresql</groupId>
+		    <artifactId>postgresql</artifactId>
+		    <version>8.2-507.jdbc3</version>
+		</dependency>
+		<!-- poi -->
+		<dependency>
+            <groupId>org.apache.poi</groupId>
+            <artifactId>poi</artifactId>
+            <version>3.10.1</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.poi</groupId>
+            <artifactId>poi-ooxml</artifactId>
+            <version>3.10.1</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.poi</groupId>
+            <artifactId>poi-scratchpad</artifactId>
+            <version>3.10.1</version>
+        </dependency>
+
+		<!--文件上传-->
+		<dependency>
+			<groupId>commons-fileupload</groupId>
+			<artifactId>commons-fileupload</artifactId>
+			<version>1.3.1</version>
+		</dependency>
+		<dependency>
+			<groupId>commons-io</groupId>
+			<artifactId>commons-io</artifactId>
+			<version>2.5</version>
+		</dependency>
+		<dependency>
+			<groupId>com.sun.jersey</groupId>
+			<artifactId>jersey-client</artifactId>
+			<version>1.19.1</version>
+		</dependency>
+        <dependency>
+            <groupId>com.sun.jersey</groupId>
+            <artifactId>jersey-core</artifactId>
+            <version>1.19.1</version>
+        </dependency>
+
+		<!-- https://mvnrepository.com/artifact/org.apache.poi/poi -->
+		<dependency>
+			<groupId>org.apache.poi</groupId>
+			<artifactId>poi</artifactId>
+			<version>3.10.1</version>
+		</dependency>
+
+	</dependencies>
+
+    <build>
+        <finalName>wfj-business</finalName>
+
+        <resources>
+            <resource>
+                 <directory>src/main/java</directory>
+                <includes>
+                    <include>**/*.xml</include>
+                </includes>
+            </resource>
+            <resource>
+                <directory>src/main/resources</directory>
+                <includes>
+                    <include>**/*</include>
+                </includes>
+            </resource>
+            <resource>
+                <directory>src/main/data</directory>
+                <includes>
+                    <include>**/*.xml</include>
+                </includes>
+            </resource>
+        </resources>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.tomcat.maven</groupId>
+				<artifactId>tomcat7-maven-plugin</artifactId>
+				<version>2.2</version>
+				<configuration>
+					<!-- 定义项目发布路径，相当于把项目放入tomcat的ROOT目录 访问项目时：不需要使用项目名称，直接使用路径访问 -->
+					<path>/</path>
+					<port>8082</port>
+					<uriEncoding>utf-8</uriEncoding>
+				</configuration>
+			</plugin>
+		</plugins>
+    </build>
+</project>

@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.wdzsj.mgr.dao.marketing.KpiDetailDao" >
+  <resultMap id="BaseResultMap" type="com.wdzsj.mgr.entity.marketing.KpiDetail" >
+    <result column="act_id" property="actId" jdbcType="BIGINT" />
+    <result column="kpi_type" property="kpiType" jdbcType="VARCHAR" />
+    <result column="kpi_value" property="kpiValue" jdbcType="VARCHAR" />
+    <result column="up_to_standard" property="upToStandard" jdbcType="VARCHAR" />
+  </resultMap>
+
+  <!--基本元素-->
+  <sql id="Base_Column_List" >
+    act_id, kpi_type, kpi_value, up_to_standard
+  </sql>
+
+  <!--根据主键查询-->
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from t_wfj_kpi_detail
+    where act_id = #{actId,jdbcType=BIGINT}
+  </select>
+
+  <!--全部插入-->
+  <insert id="insert" parameterType="com.wdzsj.mgr.entity.marketing.KpiDetail" >
+    insert into t_wfj_kpi_detail (act_id, kpi_type, kpi_value, 
+      up_to_standard)
+    values (#{actId,jdbcType=BIGINT}, #{kpiType,jdbcType=VARCHAR}, #{kpiValue,jdbcType=VARCHAR}, 
+      #{upToStandard,jdbcType=VARCHAR})
+  </insert>
+
+  <!--动态插入-->
+  <insert id="insertSelective" parameterType="com.wdzsj.mgr.entity.marketing.KpiDetail" >
+    insert into t_wfj_kpi_detail
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="actId != null" >
+        act_id,
+      </if>
+      <if test="kpiType != null" >
+        kpi_type,
+      </if>
+      <if test="kpiValue != null" >
+        kpi_value,
+      </if>
+      <if test="upToStandard != null" >
+        up_to_standard,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="actId != null" >
+        #{actId,jdbcType=BIGINT},
+      </if>
+      <if test="kpiType != null" >
+        #{kpiType,jdbcType=VARCHAR},
+      </if>
+      <if test="kpiValue != null" >
+        #{kpiValue,jdbcType=VARCHAR},
+      </if>
+      <if test="upToStandard != null" >
+        #{upToStandard,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+
+  <!--统计查询-->
+  <select id="countByMap" resultType="java.lang.Integer" >
+    select count(*) from t_wfj_kpi_detail
+  </select>
+
+  <!--根据主键动态更新-->
+  <update id="updateByPrimaryKeySelective" parameterType="map" >
+    update t_wfj_kpi_detail
+    <set >
+      <if test="kpiType != null" >
+        kpi_type = #{kpiType,jdbcType=VARCHAR},
+      </if>
+      <if test="kpiValue != null" >
+        kpi_value = #{kpiValue,jdbcType=VARCHAR},
+      </if>
+      <if test="upToStandard != null" >
+        up_to_standard = #{upToStandard,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where act_id = #{actId,jdbcType=BIGINT}
+  </update>
+</mapper>

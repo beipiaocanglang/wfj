@@ -1,0 +1,190 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
+"http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+
+
+<mapper namespace="com.wdzsj.mgr.dao.acl.MdulDao">
+
+	<resultMap id="Mdul" type="com.wdzsj.mgr.entity.acl.Mdul">
+        <result property="id" column="id"/>
+        <result property="parId" column="par_id"/>
+        <result property="name" column="name"/>
+        <result property="url" column="url"/>
+        <result property="sn" column="sn"/>
+        <result property="path" column="path"/>
+        <result property="status" column="status"/>
+		<result property="type" column="type"/>
+        <result property="system" column="system"/>
+        <result property="seq" column="seq"/>
+	</resultMap>
+	
+	<resultMap id="MdulAll" type="com.wdzsj.mgr.entity.acl.Mdul" extends="Mdul">
+        <association property="parent" column="par_id" select="getById"/>
+        <association property="children" column="id" select="getByChild"/>
+        <association property="functions" column="id" select="com.wdzsj.mgr.dao.acl.FuncDao.findByModuleid"/>
+    </resultMap>
+
+	<!-- 用于select查询公用抽取的列 -->
+	<sql id="columns">
+		id,par_id,name,url,sn,path,status,type,system,seq
+	</sql>
+
+	<insert id="insert" useGeneratedKeys="true" keyProperty="id">
+        insert into tacl_mdul (
+        	id ,
+        	par_id ,
+        	name ,
+        	url ,
+        	sn ,
+        	path ,
+        	status ,
+        	type ,
+        	system ,
+        	seq  
+        ) values (
+        	#{id} ,
+        	#{parId} ,
+        	#{name} ,
+        	#{url} ,
+        	#{sn} ,
+        	#{path} ,
+        	#{status} ,
+        	#{type} ,
+        	#{system} ,
+        	#{seq} 
+        )
+	</insert>
+    
+	<update id="update" >
+        update tacl_mdul set
+	        par_id = #{parId} ,
+	        name = #{name} ,
+	        url = #{url} ,
+	        sn = #{sn} ,
+	        path = #{path} ,
+	        status = #{status} ,
+	        type = #{type} ,
+	        system = #{system} ,
+	        seq = #{seq} 
+        where 
+	        id = #{id} 
+	</update>
+
+    <delete id="delete">
+        delete from tacl_mdul where
+        id = #{id} 
+    </delete>
+    
+    <select id="getById" resultMap="Mdul" >
+		select <include refid="columns" />
+		    from tacl_mdul
+	        where 
+		        id = #{id} 
+	</select>
+	
+	<select id="getByChild" resultMap="MdulAll" >
+	    select <include refid="columns" />
+	        from tacl_mdul
+	        where 
+		        par_id = #{id} 
+    </select>
+    
+	<select id="getBySn" resultType="Long" >
+		select id
+		    from tacl_mdul
+	        where 
+		        sn = #{sn} 
+	</select>
+	
+	<select id="getByUrl" parameterType="String" resultType="java.util.HashMap" >
+		select 
+			distinct
+			a.sn as resourceSn,
+			b.levels as levels,
+			b.url 
+		    from tacl_mdul a
+		    left join tacl_func b on b.mdul_id = a.id
+	        where 
+		        b.url like #{aclUrl}
+	</select>
+	
+	<sql id="findPageWhere">
+		<where>	      				
+	       <if test="parId != null and parId != ''">
+				and par_id = #{parId}
+			</if>
+	       <if test="name != null and name != ''">
+				and name = #{name}
+			</if>
+	       <if test="url != null and url != ''">
+				and url = #{url}
+			</if>
+	       <if test="sn != null and sn != ''">
+				and sn = #{sn}
+			</if>
+	       <if test="path != null and path != ''">
+				and path = #{path}
+			</if>
+	       <if test="status != null and status != ''">
+				and status = #{status}
+			</if>
+	       <if test="system != null and system != ''">
+				and system = #{system}
+			</if>
+	       <if test="seq != null and seq != ''">
+				and seq = #{seq}
+			</if>
+		</where>
+	</sql>
+		
+    <select id="count" resultType="Integer">
+        select count(*) from tacl_mdul 
+		<include refid="findPageWhere"/>    
+    </select>
+    
+    <select id="findList" resultMap="Mdul">
+    	select <include refid="columns" />
+	    from tacl_mdul 
+		<include refid="findPageWhere"/>
+		<if test="sortColumns != null">
+			order by ${sortColumns}
+		</if>
+		limit ${offset}, ${pageSize}
+    </select>
+    
+    <select id="findMduls" resultMap="Mdul" >
+    	select <include refid="columns" />
+	    from tacl_mdul
+		<where>
+			and id in (${id})
+			<if test="system != null and system != ''">
+				and system #{system}
+			</if>
+			and type = 1
+			and enab_flag = 1
+		</where>
+		order by id
+    </select>
+
+	<select id="findAllMduls" resultMap="Mdul" >
+		select <include refid="columns" />
+		from tacl_mdul
+		where
+		type = 1
+		and enab_flag = 1
+		order by id
+	</select>
+    
+    <select id="findByParent" resultMap="MdulAll" >
+    	select <include refid="columns" />
+	    from tacl_mdul
+		<where>
+			and type = #{type}
+			and par_id = 0
+			and enab_flag = 1
+		</where>
+    </select>
+
+</mapper>
+

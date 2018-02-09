@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.wdzsj.mgr.dao.marketing.ActiveMemberRelationDao" >
+  <resultMap id="BaseResultMap" type="com.wdzsj.mgr.entity.marketing.ActiveMemberRelation" >
+    <result column="act_id" property="actId" jdbcType="BIGINT" />
+    <result column="cid" property="cid" jdbcType="VARCHAR" />
+  </resultMap>
+  
+  <sql id="Base_Column_List" >
+    act_id, cid
+  </sql>
+
+  <insert id="insert" parameterType="com.wdzsj.mgr.entity.marketing.ActiveMemberRelation" >
+    insert into t_wfj_active_member_relation (act_id, cid)
+    values (#{actId,jdbcType=BIGINT}, #{cid,jdbcType=VARCHAR})
+  </insert>
+
+  <select id="selectByActIdAndCid" resultMap="BaseResultMap">
+    SELECT
+    <include refid="Base_Column_List"/>
+    FROM t_wfj_active_member_relation
+    WHERE act_id=#{0} AND cid=#{1}
+  </select>
+</mapper>

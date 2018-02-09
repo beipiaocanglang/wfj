@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.wdzsj.mgr.dao.marketing.StoresDao" >
+  <resultMap id="BaseResultMap" type="com.wdzsj.mgr.entity.marketing.Stores" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="store_id" property="storeId" jdbcType="VARCHAR" />
+    <result column="province_city" property="provinceCity" jdbcType="VARCHAR" />
+    <result column="store_name" property="storeName" jdbcType="VARCHAR" />
+    <result column="store_address" property="storeAddress" jdbcType="VARCHAR" />
+    <result column="latitude" property="latitude" jdbcType="DECIMAL" />
+    <result column="longitude" property="longitude" jdbcType="DECIMAL" />
+  </resultMap>
+  <resultMap id="StoresVo" type="com.wdzsj.mgr.entity.marketing.vo.StoresVo" extends="BaseResultMap"></resultMap>
+
+  <!--基本元素-->
+  <sql id="Base_Column_List" >
+    id, store_id, province_city, store_name, store_address, latitude, longitude
+  </sql>
+
+  <!--根据主键查询-->
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from t_wfj_stores
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+
+  <!-- 暂时没有用到 根据城市对应的门店ID 查询对应的省份名称 根据省份名称查询所有相同的省份名称的数据-->
+  <select id="selectStoreByCityStoreId" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from t_wfj_stores
+    where province_city = (SELECT province_city FROM t_wfj_stores WHERE store_id = #{storeId})
+  </select>
+
+  <!--智算完成后根据智算结果返回的ctiyId查询城市名称-->
+  <select id="selectStoreNameByStoreId" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from t_wfj_stores
+    where store_id = #{storeId}
+  </select>
+
+  <select id="selectCityByStoreId" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from t_wfj_stores
+    where store_id = #{storeId,jdbcType=VARCHAR}
+  </select>
+
+  <!--统计查询-->
+  <select id="countByMap" resultType="java.lang.Integer" >
+    select count(*) from t_wfj_stores
+  </select>
+
+  <!--根据主键动态更新-->
+  <update id="updateByPrimaryKeySelective" parameterType="com.wdzsj.mgr.entity.marketing.Stores" >
+    update t_wfj_stores
+    <set >
+      <if test="storeId != null" >
+        store_id = #{storeId,jdbcType=VARCHAR},
+      </if>
+      <if test="provinceCity != null" >
+        province_city = #{provinceCity,jdbcType=VARCHAR},
+      </if>
+      <if test="storeName != null" >
+        store_name = #{storeName,jdbcType=VARCHAR},
+      </if>
+      <if test="storeAddress != null" >
+        store_address = #{storeAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="latitude != null" >
+        latitude = #{latitude,jdbcType=DECIMAL},
+      </if>
+      <if test="longitude != null" >
+        longitude = #{longitude,jdbcType=DECIMAL},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+
+
+
+  <!-- ******************************** 以下是页面重构后的服务 ******************************** -->
+    <!--获取所有城市列表-->
+    <select id="findList" resultMap="StoresVo">
+        select
+          <include refid="Base_Column_List" />
+        from t_wfj_stores
+        group by province_city
+        ORDER BY store_name ASC
+    </select>
+
+    <!--活动计划页 根据ID查询对应省份对应的门店名称-->
+    <select id="selectCityByPrimaryKey" resultMap="BaseResultMap">
+        select
+          <include refid="Base_Column_List" />
+        from t_wfj_stores
+        where province_city = (SELECT province_city FROM t_wfj_stores WHERE id = #{id,jdbcType=INTEGER})
+    </select>
+</mapper>

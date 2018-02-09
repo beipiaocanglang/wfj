@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
+"http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+
+
+<mapper namespace="com.wdzsj.mgr.dao.acl.AclDao">
+
+	<resultMap id="Acl" type="com.wdzsj.mgr.entity.acl.Acl">
+        <result property="id" column="id"/>
+        <result property="prinType" column="prin_type"/>
+        <result property="prinId" column="prin_id"/>
+        <result property="mdulId" column="mdul_id"/>
+        <result property="aclstate" column="aclstate"/>
+        <result property="acltristate" column="acltristate"/>
+	</resultMap>
+
+	<sql id="columns">
+		id,prin_type,prin_id,mdul_id,aclstate,acltristate
+	</sql>
+
+	<insert id="insert" useGeneratedKeys="true" keyProperty="id">
+        insert into tacl_acl (
+        	id ,
+        	prin_type ,
+        	prin_id ,
+        	mdul_id ,
+        	aclstate ,
+        	acltristate 
+        ) values (
+        	#{id} ,
+        	#{prinType} ,
+        	#{prinId} ,
+        	#{mdulId} ,
+        	#{aclstate} ,
+        	#{acltristate} 
+        )
+	</insert>
+
+    <update id="update" >
+        update tacl_acl set
+	        prin_type = #{prinType} ,
+	        prin_id = #{prinId} ,
+	        mdul_id = #{mdulId} ,
+	        aclstate = #{aclstate} ,
+	        acltristate = #{acltristate} 
+        where 
+	        id = #{id} 
+	</update>
+
+    <delete id="delete">
+        delete from tacl_acl where
+        id = #{id} 
+    </delete>
+    
+    <select id="getById" resultMap="Acl">
+		select <include refid="columns" />
+		    from tacl_acl
+	        where 
+		        id = #{id} 
+	</select>
+    
+    <sql id="findPageWhere">
+		<where>	      				
+			<if test="prinType != null and prinType != ''">
+				and prin_type = #{prinType}
+			</if>
+		   <if test="prinId != null">
+				and prin_id = #{prinId}
+		   </if>
+		   <if test="mdulId != null">
+				and mdul_id = #{mdulId}
+		   </if>
+		   <if test="aclstate != null">
+				and aclstate = #{aclstate}
+		   </if>
+		   <if test="acltristate != null">
+				and acltristate = #{acltristate}
+		   </if>
+		</where>
+	</sql>
+    
+    <select id="getByMap" resultMap="Acl">
+    	select <include refid="columns" />
+	    from tacl_acl 
+		<include refid="findPageWhere"/>
+		order by id desc 
+    </select>
+    
+    <select id="findAcl" resultMap="Acl">
+    	select <include refid="columns" />
+	    from tacl_acl
+		<include refid="findPageWhere"/>
+		order by id desc 
+    </select>
+    
+    <select id="findRoleids" resultType="java.util.HashMap">
+    	select 
+    	   r.id as rid, 
+    	   r.code
+	       from tacl_user_role ur 
+	       left join tacl_sys_user u on ur.user_id = u.id 
+	       left join tacl_role r on ur.role_id = r.id 
+	       where
+	       ur.user_id = #{userid}
+	       and ur.enab_flag = 1
+	       order by ur.level
+    </select>
+	
+</mapper>
+

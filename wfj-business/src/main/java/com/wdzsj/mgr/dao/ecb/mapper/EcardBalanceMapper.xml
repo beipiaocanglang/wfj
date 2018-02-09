@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.wdzsj.mgr.dao.ecb.EcardBalanceDao">
+    <!--电子卡余额查询的封装pojo-->
+    <resultMap id="EcardBalanceVo" type="com.wdzsj.mgr.entity.ecb.EcardBalanceVo">
+        <result property="initialBalance" column="initialBalance"/>
+        <result property="currentSalesCardAmount" column="currentSalesCardAmount"/>
+        <result property="currentBackCardAmount" column="currentBackCardAmount"/>
+        <result property="currentConsumeAmount" column="currentConsumeAmount"/>
+        <result property="currentReturnAmount" column="currentReturnAmount"/>
+        <result property="finalBalance" column="finalBalance"/>
+        <result property="totalCount" column="totalCount"/>
+    </resultMap>
+
+    <sql id="BaseWhere">
+        <where>
+            <if test="startDate!=null and startDate!=''">
+                <![CDATA[transtime >= #{startDate}]]>
+            </if>
+            <if test="endDate!=null and endDate!=''">
+                AND <![CDATA[transtime <= #{endDate}]]>
+            </if>
+        </where>
+    </sql>
+
+    <!--统计查询-->
+    <select id="count" resultType="int">
+        SELECT
+            count(*)
+        FROM
+            tcac_check_account
+        <include refid="BaseWhere"/>
+    </select>
+
+    <!--电子卡消费明细报表查询首页数据-->
+    <select id="findList" resultMap="EcardBalanceVo">
+        select
+            price as initialBalance,
+            price as currentSalesCardAmount,
+            price as currentBackCardAmount,
+            price as currentConsumeAmount,
+            price as currentReturnAmount,
+            price as finalBalance
+        from
+            tcac_check_account
+        <include refid="BaseWhere"/>
+        limit ${offset}, ${pageSize}
+    </select>
+
+    <!--电子卡消费明细报表导出数据-->
+    <select id="findExportExcelList" resultMap="EcardBalanceVo">
+        select
+            price as initialBalance,
+            price as currentSalesCardAmount,
+            price as currentBackCardAmount,
+            price as currentConsumeAmount,
+            price as currentReturnAmount,
+            price as finalBalance
+        from
+            tcac_check_account
+        <include refid="BaseWhere"/>
+    </select>
+</mapper>

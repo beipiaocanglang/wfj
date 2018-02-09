@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<UserMetaData>
+
+	<SysUser id="1000" uname="admin" rname="admin" pswd="96e79218965eb72c92a549dd5a330112" email="admin@test.com"/>
+	
+	<Role id="1000" name="系统管理员" code="system"/>
+	
+	<UserRole id="1000" userId="1000" roleId="1000"/>
+	
+	<!--
+	<Acl id="1000" prinType="role" prinId="1000" mdulId="1000" aclstate="1" acltristate=""/>
+	<Acl id="2000" prinType="role" prinId="1000" mdulId="1010" aclstate="31" acltristate=""/>
+	<Acl id="3000" prinType="role" prinId="1000" mdulId="1020" aclstate="31" acltristate=""/>
+	-->
+
+
+	<Mdul id="101000" parId="" name="系统管理" url="" sn="System" type="1" path="" status="0" seq="01"/>
+		<Func id="101000" name="查看" levels="0" mdulId="101000" url=""/>
+	
+		<Mdul id="101010" parId="101000" name="用户管理" url="sysUser" sn="sysUser" type="1" path="" status="0" seq="02"/>
+			<Func id="101010" name="查看" levels="0" mdulId="101010" url=""/>
+			<Func id="101011" name="添加" levels="1" mdulId="101010" url=""/>
+			<Func id="101012" name="修改" levels="2" mdulId="101010" url=""/>
+			<Func id="101013" name="删除" levels="3" mdulId="101010" url=""/>
+			<Func id="101014" name="锁定" levels="4" mdulId="101010" url=""/>
+			<Func id="101015" name="分配角色" levels="5" mdulId="101010" url=""/>
+			<Func id="101016" name="组织结构" levels="6" mdulId="101010" url=""/>
+			<Func id="101017" name="修改密码" levels="7" mdulId="101010" url=""/>
+			
+		
+		<Mdul id="101020" parId="101000" name="角色管理" url="role" sn="Role" type="1" path="" status="0" seq="03"/>
+			<Func id="101020" name="查看" levels="0" mdulId="101020" url=""/>
+			<Func id="101021" name="添加" levels="1" mdulId="101020" url=""/>
+			<Func id="101022" name="修改" levels="2" mdulId="101020" url=""/>
+			<Func id="101023" name="删除" levels="3" mdulId="101020" url=""/>
+			<Func id="101024" name="功能" levels="4" mdulId="101020" url=""/>
+			
+	
+	<Mdul id="102000" parId="" name="组织机构" url="" sn="Arct" type="1" path="" status="0" seq="02"/>
+		<Func id="102000" name="查看" levels="0" mdulId="102000" url=""/>
+	
+		<Mdul id="102010" parId="102000" name="职位管理" url="pst" sn="pst" type="1" path="" status="0" seq="01"/>
+			<Func id="102010" name="查看" levels="0" mdulId="102010" url=""/>
+			<Func id="102011" name="添加" levels="1" mdulId="102010" url=""/>
+			<Func id="102012" name="修改" levels="2" mdulId="102010" url=""/>
+			<Func id="102013" name="删除" levels="3" mdulId="102010" url=""/>
+		<Mdul id="102020" parId="102000" name="组织机构管理" url="dept" sn="dept" type="1" path="" status="0" seq="02"/>
+			<Func id="102020" name="查看" levels="0" mdulId="102020" url=""/>
+			<Func id="102021" name="添加" levels="1" mdulId="102020" url=""/>
+			<Func id="102022" name="修改" levels="2" mdulId="102020" url=""/>
+			<Func id="102023" name="删除" levels="3" mdulId="102020" url=""/>
+		
+	<Mdul id="201000" parId="" name="数据管理" url="" sn="data" type="1" path="" status="0" seq="03"/>
+		<Func id="201000" name="查看" levels="0" mdulId="201000" url=""/>
+		<Mdul id="201010" parId="201000" name="元数据管理" url="meta" sn="meta" type="1" path="" status="0" seq="01"/>
+			<Func id="201010" name="查看" levels="0" mdulId="201010" url=""/>
+			<Func id="201011" name="添加" levels="1" mdulId="201010" url=""/>
+			<Func id="201012" name="修改" levels="2" mdulId="201010" url=""/>
+			<Func id="201013" name="删除" levels="3" mdulId="201010" url=""/>
+			<Func id="201014" name="血统" levels="4" mdulId="201010" url=""/>
+		<Mdul id="201020" parId="201000" name="项目接入" url="proj" sn="proj" type="1" path="" status="0" seq="01"/>
+			<Func id="201020" name="查看" levels="0" mdulId="201020" url=""/>
+			<Func id="201021" name="添加" levels="1" mdulId="201020" url=""/>
+			<Func id="201022" name="修改" levels="2" mdulId="201020" url=""/>
+			<Func id="201023" name="删除" levels="3" mdulId="201020" url=""/>
+		<Mdul id="201030" parId="201000" name="任务接入" url="task" sn="task" type="1" path="" status="0" seq="01"/>
+			<Func id="201030" name="查看" levels="0" mdulId="201030" url=""/>
+			<Func id="201031" name="添加" levels="1" mdulId="201030" url=""/>
+			<Func id="201032" name="修改" levels="2" mdulId="201030" url=""/>
+			<Func id="201033" name="删除" levels="3" mdulId="201030" url=""/>
+		
+			
+			
+	<Mdul id="103000" parId="" name="报表管理" url="" sn="Chart" type="1" path="" status="0" seq="04"/>
+		<Func id="103000" name="查看" levels="0" mdulId="103000" url=""/>
+	
+		<Mdul id="103010" parId="103000" name="报表信息" url="storSale" sn="storSale" type="1" path="" status="0" seq="01"/>
+			<Func id="103010" name="查看" levels="0" mdulId="103010" url=""/>	
+					
+		<Mdul id="103020" parId="103000" name="实时报表" url="pvuv" sn="pvuv" type="1" path="" status="0" seq="02"/>
+			<Func id="103020" name="查看" levels="0" mdulId="103020" url=""/>
+			
+		<Mdul id="103030" parId="103000" name="门店消费查询报表" url="cac" sn="cac" type="1" path="" status="0" seq="03"/>
+			<Func id="103030" name="查看" levels="0" mdulId="103030" url=""/>
+
+		<Mdul id="103060" parId="103000" name="电子卡余额查询表" url="ecb" sn="ecb" type="1" path="" status="0" seq="06"/>
+			<Func id="103060" name="查看" levels="0" mdulId="103060" url=""/>
+
+		<Mdul id="103070" parId="103000" name="汇总表查询" url="ttr" sn="ttr" type="1" path="" status="0" seq="04"/>
+			<Func id="103070" name="查看" levels="0" mdulId="103070" url=""/>
+
+		<Mdul id="103080" parId="103000" name="消费核对表查询" url="cac" sn="cac" type="1" path="" status="0" seq="05"/>
+			<Func id="103080" name="查看" levels="0" mdulId="103080" url=""/>
+
+		<Mdul id="103090" parId="103000" name="电子卡消费明细表查询" url="ecd" sn="ecd" type="1" path="" status="0" seq="07"/>
+			<Func id="103090" name="查看" levels="0" mdulId="103090" url=""/>
+
+		<Mdul id="103100" parId="103000" name="售卡余额表查询" url="scb" sn="scb" type="1" path="" status="0" seq="08"/>
+			<Func id="103100" name="查看" levels="0" mdulId="103100" url=""/>
+
+	<Mdul id="104000" parId="" name="服务器资源" url="" sn="Srm" type="1" path="" status="0" seq="05"/>
+		<Func id="104000" name="查看" levels="0" mdulId="104000" url=""/>	
+		<Mdul id="104010" parId="104000" name="服务器资源管理" url="srvr" sn="srvr" type="1" path="" status="0" seq="01"/>
+			<Func id="104010" name="查看" levels="0" mdulId="104010" url=""/>
+			<Func id="104011" name="添加" levels="1" mdulId="104010" url=""/>
+			<Func id="104012" name="修改" levels="2" mdulId="104010" url=""/>
+			<Func id="104013" name="删除" levels="3" mdulId="104010" url=""/>			
+		<Mdul id="104020" parId="104000" name="实时监控" url="http://123.125.127.167:20080/grafana/dashboard/db/zabbix-server-dashboard?orgId=1" sn="Link" type="1" path="" status="0" seq="02"/>
+			<Func id="104020" name="查看" levels="0" mdulId="104020" url=""/>
+			
+	<Mdul id="105000" parId="" name="任务管理" url="" sn="Tsk" type="1" path="" status="0" seq="06"/>
+		<Func id="105000" name="查看" levels="0" mdulId="105000" url=""/>	
+		<Mdul id="105010" parId="105000" name="任务列表" url="sched" sn="sched" type="1" path="" status="0" seq="01"/>
+			<Func id="105010" name="查看" levels="0" mdulId="105010" url=""/>
+			<Func id="105011" name="添加" levels="1" mdulId="105010" url=""/>
+			<Func id="105012" name="修改" levels="2" mdulId="105010" url=""/>
+			<Func id="105013" name="删除" levels="3" mdulId="105010" url=""/>
+			<Func id="105014" name="启用" levels="4" mdulId="105010" url=""/>
+			<Func id="105015" name="查看日志" levels="5" mdulId="105010" url=""/>
+		<Mdul id="105020" parId="105000" name="任务调度管理" url="sch" sn="sch" type="1" path="" status="0" seq="02"/>
+			<Func id="105020" name="查看" levels="0" mdulId="105020" url=""/>
+		<Mdul id="105030" parId="105000" name="分布式任务管理" url="jobinfo" sn="jobinfo" type="1" path="" status="0" seq="03"/>
+		<Mdul id="105040" parId="105000" name="分布式调度日志" url="joblog" sn="joblog" type="1" path="" status="0" seq="04"/>
+		<Mdul id="105050" parId="105000" name="分布式执行器管理" url="jobgroup" sn="jobgroup" type="1" path="" status="0" seq="05"/>
+
+
+	<Mdul id="106000" parId="" name="营销活动" url="" sn="Mka" type="1" path="" status="0" seq="07"/>
+		<Mdul id="106010" parId="106000" name="营销活动列表" url="marketing" sn="marketing" type="1" path="" status="0" seq="01"/>
+			<Func id="106010" name="查看" levels="0" mdulId="106010" url=""/>
+
+	<Mdul id="107000" parId="0" name="现金卡管理" url="" sn="Ccm" type="1" path="" status="0" seq="08"/>
+		<Mdul id="107010" parId="107000" name="订单查询" url="card/order" sn="card/order" type="1" path="" status="0" seq="01"/>
+			<Func id="107010" name="查看" levels="0" mdulId="107010" url=""/>
+		<Mdul id="107020" parId="107000" name="购卡激活查询" url="card/activation" sn="card" type="1" path="" status="0" seq="02"/>
+			<Func id="107020" name="查看" levels="0" mdulId="107020" url=""/>
+		<Mdul id="107030" parId="107000" name="交易明细查询" url="card/transDetail" sn="card/transDetail" type="1" path="" status="0" seq="03"/>
+			<Func id="107030" name="查看" levels="0" mdulId="107030" url=""/>
+
+<!-- 
+		
+	<Mdul id="201000" parId="" name="数据管理" url="" sn="data" type="2" path="" status="0" seq="01"/>
+		<Func id="2000" name="查看" levels="0" mdulId="201000" url=""/>
+
+		<Mdul id="201010" parId="201000" name="物业数据" url="" sn="wuye" type="2" path="" status="0" seq="02"/>
+			<Func id="201010" name="查看" levels="0" mdulId="201010" url=""/>
+			<Func id="201011" name="添加" levels="1" mdulId="201010" url=""/> -->
+			
+</UserMetaData>
+

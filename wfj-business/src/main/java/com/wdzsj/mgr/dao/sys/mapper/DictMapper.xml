@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
+"http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+
+<mapper namespace="com.wdzsj.mgr.dao.sys.DictDao">
+
+	<resultMap id="Dict" type="com.wdzsj.mgr.entity.sys.Dict">
+        <result property="id" column="id"/>
+        <result property="name" column="name"/>
+        <result property="code" column="code"/>
+        <result property="parId" column="par_id"/>
+	</resultMap>
+	
+	<sql id="columns">
+		id,name,code,par_id
+	</sql>
+	
+	<insert id="insert" useGeneratedKeys="true" keyProperty="id">
+        insert into tsys_dict (
+            id ,
+            name ,
+            code ,
+            par_id 
+        ) values (
+            #{id} ,
+            #{name} ,
+            #{code} ,
+            #{parId} 
+        )
+    </insert>
+    
+    <update id="update" >
+        update tsys_dict set
+            name = #{name} ,
+            code = #{code} ,
+            par_id = #{parId} 
+        where 
+            id = #{id} 
+    </update>
+
+    <delete id="delete">
+    <![CDATA[
+        delete from tsys_dict where
+        id = #{id} 
+    ]]>
+    </delete>
+	
+    <select id="findByParId" resultMap="Dict">
+    	select <include refid="columns" />
+    	from tsys_dict 
+    	where par_id = #{parId}
+    </select>
+    
+    <select id="findByCode" resultMap="Dict">
+    	select a.id,a.name,a.code,a.par_id
+    	from tsys_dict a
+    	join tsys_dict b on a.par_id = b.id 
+    	where b.code = #{code}
+    </select>
+    
+    <select id="getById" resultMap="Dict">
+    	select <include refid="columns" />
+    	from tsys_dict 
+    	where id = #{id}
+    </select>
+    
+    <select id="getByCode" resultMap="Dict">
+    	select <include refid="columns" />
+    	from tsys_dict 
+    	where code = #{code}
+    </select>
+    
+    <select id="countByParId" resultType="Integer">
+        select count(id)
+        from tsys_dict 
+        where par_id = #{parId}
+    </select>
+    
+    <select id="countByCode" resultType="Integer">
+        select count(id)
+        from tsys_dict 
+        where code = #{code}
+    </select>
+    
+    
+</mapper>
+

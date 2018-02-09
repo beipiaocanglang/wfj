@@ -1,0 +1,223 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.wdzsj.mgr.dao.marketing.MemberDao" >
+  <resultMap id="BaseResultMap" type="com.wdzsj.mgr.entity.marketing.Member" >
+    <result column="cid" property="cid" jdbcType="VARCHAR" />
+    <result column="phone" property="phone" jdbcType="VARCHAR" />
+    <result column="openid" property="openid" jdbcType="VARCHAR" />
+    <result column="sex" property="sex" jdbcType="VARCHAR" />
+    <result column="age_group" property="ageGroup" jdbcType="VARCHAR" />
+    <result column="province" property="province" jdbcType="VARCHAR" />
+    <result column="city" property="city" jdbcType="VARCHAR" />
+    <result column="district" property="district" jdbcType="VARCHAR" />
+    <result column="mdh" property="mdh" jdbcType="VARCHAR" />
+    <result column="cid_status" property="cidStatus" jdbcType="VARCHAR" />
+    <result column="cardtime" property="cardtime" jdbcType="TIMESTAMP" />
+    <result column="hdsum" property="hdsum" jdbcType="DECIMAL" />
+    <result column="jfsum" property="jfsum" jdbcType="DECIMAL" />
+    <result column="xfsum" property="xfsum" jdbcType="DECIMAL" />
+    <result column="marry" property="marry" jdbcType="VARCHAR" />
+    <result column="educ" property="educ" jdbcType="VARCHAR" />
+    <result column="work" property="work" jdbcType="VARCHAR" />
+  </resultMap>
+
+  <!--基本元素-->
+  <sql id="Base_Column_List" >
+    cid, phone, openid, sex, age_group, province, city, district, mdh, cid_status, cardtime, 
+    hdsum, jfsum, xfsum, marry, educ, work
+  </sql>
+
+  <!--根据主键查询-->
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" >
+    select
+    <include refid="Base_Column_List" />
+    from t_wfj_member
+    where cid = #{cid,jdbcType=VARCHAR}
+  </select>
+
+  <!--全部插入-->
+  <insert id="insert" parameterType="com.wdzsj.mgr.entity.marketing.Member" >
+    insert into t_wfj_member (cid, phone, openid, 
+      sex, age_group, province, 
+      city, district, mdh, 
+      cid_status, cardtime, hdsum, 
+      jfsum, xfsum, marry, 
+      educ, work)
+    values (#{cid,jdbcType=VARCHAR}, #{phone,jdbcType=VARCHAR}, #{openid,jdbcType=VARCHAR}, 
+      #{sex,jdbcType=VARCHAR}, #{ageGroup,jdbcType=VARCHAR}, #{province,jdbcType=VARCHAR}, 
+      #{city,jdbcType=VARCHAR}, #{district,jdbcType=VARCHAR}, #{mdh,jdbcType=VARCHAR}, 
+      #{cidStatus,jdbcType=VARCHAR}, #{cardtime,jdbcType=TIMESTAMP}, #{hdsum,jdbcType=DECIMAL}, 
+      #{jfsum,jdbcType=DECIMAL}, #{xfsum,jdbcType=DECIMAL}, #{marry,jdbcType=VARCHAR}, 
+      #{educ,jdbcType=VARCHAR}, #{work,jdbcType=VARCHAR})
+  </insert>
+
+  <!--动态插入-->
+  <insert id="insertSelective" parameterType="com.wdzsj.mgr.entity.marketing.Member" >
+    insert into t_wfj_member
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="cid != null" >
+        cid,
+      </if>
+      <if test="phone != null" >
+        phone,
+      </if>
+      <if test="openid != null" >
+        openid,
+      </if>
+      <if test="sex != null" >
+        sex,
+      </if>
+      <if test="ageGroup != null" >
+        age_group,
+      </if>
+      <if test="province != null" >
+        province,
+      </if>
+      <if test="city != null" >
+        city,
+      </if>
+      <if test="district != null" >
+        district,
+      </if>
+      <if test="mdh != null" >
+        mdh,
+      </if>
+      <if test="cidStatus != null" >
+        cid_status,
+      </if>
+      <if test="cardtime != null" >
+        cardtime,
+      </if>
+      <if test="hdsum != null" >
+        hdsum,
+      </if>
+      <if test="jfsum != null" >
+        jfsum,
+      </if>
+      <if test="xfsum != null" >
+        xfsum,
+      </if>
+      <if test="marry != null" >
+        marry,
+      </if>
+      <if test="educ != null" >
+        educ,
+      </if>
+      <if test="work != null" >
+        work,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="cid != null" >
+        #{cid,jdbcType=VARCHAR},
+      </if>
+      <if test="phone != null" >
+        #{phone,jdbcType=VARCHAR},
+      </if>
+      <if test="openid != null" >
+        #{openid,jdbcType=VARCHAR},
+      </if>
+      <if test="sex != null" >
+        #{sex,jdbcType=VARCHAR},
+      </if>
+      <if test="ageGroup != null" >
+        #{ageGroup,jdbcType=VARCHAR},
+      </if>
+      <if test="province != null" >
+        #{province,jdbcType=VARCHAR},
+      </if>
+      <if test="city != null" >
+        #{city,jdbcType=VARCHAR},
+      </if>
+      <if test="district != null" >
+        #{district,jdbcType=VARCHAR},
+      </if>
+      <if test="mdh != null" >
+        #{mdh,jdbcType=VARCHAR},
+      </if>
+      <if test="cidStatus != null" >
+        #{cidStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="cardtime != null" >
+        #{cardtime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="hdsum != null" >
+        #{hdsum,jdbcType=DECIMAL},
+      </if>
+      <if test="jfsum != null" >
+        #{jfsum,jdbcType=DECIMAL},
+      </if>
+      <if test="xfsum != null" >
+        #{xfsum,jdbcType=DECIMAL},
+      </if>
+      <if test="marry != null" >
+        #{marry,jdbcType=VARCHAR},
+      </if>
+      <if test="educ != null" >
+        #{educ,jdbcType=VARCHAR},
+      </if>
+      <if test="work != null" >
+        #{work,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+
+  <!--根据cid动态更新-->
+  <update id="updateByCidSelective" parameterType="com.wdzsj.mgr.entity.marketing.Member" >
+    update t_wfj_member
+    <set >
+      <if test="cid != null" >
+        cid = #{cid,jdbcType=VARCHAR},
+      </if>
+      <if test="phone != null" >
+        phone = #{phone,jdbcType=VARCHAR},
+      </if>
+      <if test="openid != null" >
+        openid = #{openid,jdbcType=VARCHAR},
+      </if>
+      <if test="sex != null" >
+        sex = #{sex,jdbcType=VARCHAR},
+      </if>
+      <if test="ageGroup != null" >
+        age_group = #{ageGroup,jdbcType=VARCHAR},
+      </if>
+      <if test="province != null" >
+        province = #{province,jdbcType=VARCHAR},
+      </if>
+      <if test="city != null" >
+        city = #{city,jdbcType=VARCHAR},
+      </if>
+      <if test="district != null" >
+        district = #{district,jdbcType=VARCHAR},
+      </if>
+      <if test="mdh != null" >
+        mdh = #{mdh,jdbcType=VARCHAR},
+      </if>
+      <if test="cidStatus != null" >
+        cid_status = #{cidStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="cardtime != null" >
+        cardtime = #{cardtime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="hdsum != null" >
+        hdsum = #{hdsum,jdbcType=DECIMAL},
+      </if>
+      <if test="jfsum != null" >
+        jfsum = #{jfsum,jdbcType=DECIMAL},
+      </if>
+      <if test="xfsum != null" >
+        xfsum = #{xfsum,jdbcType=DECIMAL},
+      </if>
+      <if test="marry != null" >
+        marry = #{marry,jdbcType=VARCHAR},
+      </if>
+      <if test="educ != null" >
+        educ = #{educ,jdbcType=VARCHAR},
+      </if>
+      <if test="work != null" >
+        work = #{work,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where cid = #{cid,jdbcType=VARCHAR}
+  </update>
+</mapper>

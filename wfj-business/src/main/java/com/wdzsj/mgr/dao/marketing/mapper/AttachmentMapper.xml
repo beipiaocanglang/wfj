@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.wdzsj.mgr.dao.marketing.AttachmentDao" >
+  <resultMap id="BaseResultMap" type="com.wdzsj.mgr.entity.marketing.Attachment" >
+    <id column="attachment_id" property="attachmentId" jdbcType="BIGINT" />
+    <result column="attachment_name" property="attachmentName" jdbcType="VARCHAR" />
+    <result column="attachment_type" property="attachmentType" jdbcType="VARCHAR" />
+    <result column="attachment_createtime" property="attachmentCreatetime" jdbcType="TIMESTAMP" />
+    <result column="attachment_updatetime" property="attachmentUpdatetime" jdbcType="TIMESTAMP" />
+    <result column="file_url" property="fileUrl" jdbcType="VARCHAR" />
+    <result column="attachment_content" property="attachmentContent" jdbcType="LONGVARBINARY" />
+  </resultMap>
+
+  <!--基本元素-->
+  <sql id="Base_Column_List" >
+    attachment_id, attachment_name, attachment_type, attachment_createtime, attachment_updatetime, 
+    file_url, attachment_content
+  </sql>
+
+  <!--根据主键查询-->
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from t_wfj_attachment
+    where attachment_id = #{attachmentId,jdbcType=BIGINT}
+  </select>
+
+  <!--全部插入-->
+  <insert id="insert" parameterType="com.wdzsj.mgr.entity.marketing.Attachment" >
+    insert into t_wfj_attachment (attachment_id, attachment_name, attachment_type, 
+      attachment_createtime, attachment_updatetime, 
+      file_url, attachment_content)
+    values (#{attachmentId,jdbcType=BIGINT}, #{attachmentName,jdbcType=VARCHAR}, #{attachmentType,jdbcType=VARCHAR}, 
+      #{attachmentCreatetime,jdbcType=TIMESTAMP}, #{attachmentUpdatetime,jdbcType=TIMESTAMP}, 
+      #{fileUrl,jdbcType=VARCHAR}, #{attachmentContent,jdbcType=LONGVARBINARY})
+  </insert>
+
+  <!--动态插入-->
+  <insert id="insertSelective" useGeneratedKeys="true" keyProperty="attachmentId" parameterType="com.wdzsj.mgr.entity.marketing.Attachment" >
+    insert into t_wfj_attachment
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="attachmentId != null" >
+        attachment_id,
+      </if>
+      <if test="attachmentName != null" >
+        attachment_name,
+      </if>
+      <if test="attachmentType != null" >
+        attachment_type,
+      </if>
+      <if test="attachmentCreatetime != null" >
+        attachment_createtime,
+      </if>
+      <if test="attachmentUpdatetime != null" >
+        attachment_updatetime,
+      </if>
+      <if test="fileUrl != null" >
+        file_url,
+      </if>
+      <if test="attachmentContent != null" >
+        attachment_content,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="attachmentId != null" >
+        #{attachmentId,jdbcType=BIGINT},
+      </if>
+      <if test="attachmentName != null" >
+        #{attachmentName,jdbcType=VARCHAR},
+      </if>
+      <if test="attachmentType != null" >
+        #{attachmentType,jdbcType=VARCHAR},
+      </if>
+      <if test="attachmentCreatetime != null" >
+        #{attachmentCreatetime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="attachmentUpdatetime != null" >
+        #{attachmentUpdatetime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="fileUrl != null" >
+        #{fileUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="attachmentContent != null" >
+        #{attachmentContent,jdbcType=LONGVARBINARY},
+      </if>
+    </trim>
+  </insert>
+
+  <!--统计查询-->
+  <select id="countByMap" resultType="java.lang.Integer" >
+    select count(*) from t_wfj_attachment
+  </select>
+
+  <!--根据主键动态更新-->
+  <update id="updateByPrimaryKeySelective" parameterType="com.wdzsj.mgr.entity.marketing.Attachment" >
+    update t_wfj_attachment
+    <set >
+      <if test="attachmentName != null" >
+        attachment_name = #{attachmentName,jdbcType=VARCHAR},
+      </if>
+      <if test="attachmentType != null" >
+        attachment_type = #{attachmentType,jdbcType=VARCHAR},
+      </if>
+      <if test="attachmentCreatetime != null" >
+        attachment_createtime = #{attachmentCreatetime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="attachmentUpdatetime != null" >
+        attachment_updatetime = #{attachmentUpdatetime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="fileUrl != null" >
+        file_url = #{fileUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="attachmentContent != null" >
+        attachment_content = #{attachmentContent,jdbcType=LONGVARBINARY},
+      </if>
+    </set>
+    where attachment_id = #{attachmentId,jdbcType=BIGINT}
+  </update>
+</mapper>

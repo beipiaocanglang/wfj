@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
+"http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+
+
+<mapper namespace="com.wdzsj.mgr.dao.card.CardActivationDao">
+
+	<resultMap id="CardActivation" type="com.wdzsj.mgr.entity.card.CardActivation">
+		<result property="id" column="id"/>
+        <result property="orderId" column="orderId"/>
+        <result property="transId" column="transId"/>
+        <result property="payFinishTime" column="payFinishTime"/>
+        <result property="totalPrice" column="totalPrice"/>
+        <result property="openid" column="openid"/>
+        <result property="unionid" column="unionid"/>
+        <result property="corpUserId" column="corpUserId"/>
+        <result property="phoneNo" column="phoneNo"/>
+        <result property="isChatRoom" column="isChatRoom"/>
+        <result property="cardId" column="cardId"/>
+        <result property="price" column="price"/>
+        <result property="cardCode" column="cardCode"/>
+        <result property="jsonData" column="jsonData"/>
+	</resultMap>
+	
+	<!-- 用于select查询公用抽取的列 -->
+	<sql id="columns">
+		id,orderId,transId,payFinishTime,totalPrice,openid,unionid,corpUserId,phoneNo,isChatRoom,cardId,price,cardCode,jsonData
+	</sql>
+
+	<insert id="insert" useGeneratedKeys="true" keyProperty="id">
+        insert into t_card_activation(
+        	orderId,
+        	transId,
+        	payFinishTime,
+        	totalPrice,
+        	openid,
+        	unionid,
+        	corpUserId,
+        	phoneNo,
+        	isChatRoom,
+        	cardId,
+        	price,
+        	cardCode,
+        	jsonData
+        ) values (
+        	#{orderId} ,
+        	#{transId} ,
+        	#{payFinishTime} ,
+        	#{totalPrice} ,
+        	#{openid} ,
+        	#{unionid} ,
+        	#{corpUserId} ,
+        	#{phoneNo} ,
+        	#{isChatRoom} ,
+        	#{cardId} ,
+        	#{price} ,
+        	#{cardCode},
+        	#{jsonData}
+        )
+	</insert>
+    
+	<update id="update" >
+        update t_card_activation set
+        	transId = #{transId} ,
+        	payFinishTime = #{payFinishTime} ,
+        	totalPrice = #{totalPrice} ,
+        	openid = #{openid} ,
+        	unionid = #{unionid} ,
+        	corpUserId = #{corpUserId} ,
+        	phoneNo = #{phoneNo} ,
+        	isChatRoom = #{isChatRoom} ,
+        	cardId = #{cardId} ,
+        	price = #{price} ,
+        	cardCode = #{cardCode},
+        	jsonData = #{jsonData}
+        where 
+        	id = #{id}
+	</update>
+
+    <update id="delete">
+    	delete 
+    		from 
+    	t_card_activation
+        where 
+        	id = #{id}
+    </update>
+    
+    <select id="getById" resultMap="CardActivation">
+		select <include refid="columns" />
+		    from t_card_activation 
+	        where 
+		        id = #{id}
+	</select>
+	
+	<sql id="findPageWhere">
+		<where>
+			<if test="orderId != null and orderId != ''">
+				and orderId = #{orderId}
+			</if>
+			<if test="transId != null and transId != ''">
+				and transId = #{transId}
+			</if>
+			<if test="payFinishTime != null and payFinishTime != ''">
+				and payFinishTime = #{payFinishTime}
+			</if>
+			<if test="totalPrice != null and totalPrice != ''">
+				and totalPrice = #{totalPrice}
+			</if>
+			<if test="openid != null and openid != ''">
+				and openid = #{openid}
+			</if>
+			<if test="unionid != null and unionid != ''">
+				and unionid = #{unionid}
+			</if>
+			<if test="corpUserId != null and corpUserId != ''">
+				and corpUserId = #{corpUserId}
+			</if>
+			<if test="phoneNo != null and phoneNo != ''">
+				and phoneNo = #{phoneNo}
+			</if>
+			<if test="isChatRoom != null and isChatRoom != ''">
+				and isChatRoom = #{isChatRoom}
+			</if>
+			<if test="cardId != null and cardId != ''">
+				and cardId = #{cardId}
+			</if>
+			<if test="price != null and price != ''">
+				and price = #{price}
+			</if>
+			<if test="cardCode != null and cardCode != ''">
+				and cardCode = #{cardCode}
+			</if>
+			<if test="jsonData != null and jsonData != ''">
+				and jsonData = #{jsonData}
+			</if>
+		</where>
+	</sql>
+	
+	<select id="count" resultType="Integer">
+        select count(id) from t_card_activation
+		<include refid="findPageWhere"/>
+    </select>
+	
+	<select id="findList" resultMap="CardActivation">
+    	select <include refid="columns" />
+	    from t_card_activation
+		<include refid="findPageWhere"/>
+		order by id desc
+		limit ${offset}, ${pageSize}
+    </select>
+    
+    
+    <select id="findPage" resultMap="CardActivation">
+    	select <include refid="columns" />
+	    from t_card_activation 
+		<include refid="findPageWhere"/>
+		order by id desc
+    </select>
+
+</mapper>
+

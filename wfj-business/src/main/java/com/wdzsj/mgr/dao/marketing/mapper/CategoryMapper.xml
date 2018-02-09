@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.wdzsj.mgr.dao.marketing.CategoryDao" >
+  <resultMap id="BaseResultMap" type="com.wdzsj.mgr.entity.marketing.Category" >
+    <result column="pp" property="pp" jdbcType="VARCHAR" />
+    <result column="standard_ppname" property="standardPpname" jdbcType="VARCHAR" />
+    <result column="p_id" property="pId" jdbcType="VARCHAR" />
+    <result column="class_hierarchy" property="classHierarchy" jdbcType="INTEGER" />
+    <result column="store_id" property="storeId" jdbcType="VARCHAR" />
+  </resultMap>
+
+  <!--全部插入-->
+  <insert id="insert" parameterType="com.wdzsj.mgr.entity.marketing.Category" >
+    insert into t_wfj_category (pp, standard_ppname, p_id, class_hierarchy, storeId)
+    values (#{pp,jdbcType=VARCHAR}, #{standardPpname,jdbcType=VARCHAR}, #{pId,jdbcType=VARCHAR}, #{classHierarchy,jdbcType=INTEGER}, #{storeId,jdbcType=VARCHAR})
+  </insert>
+
+  <!--动态插入-->
+  <insert id="insertSelective" parameterType="com.wdzsj.mgr.entity.marketing.Category" >
+    insert into t_wfj_category
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="pp != null" >
+        pp,
+      </if>
+      <if test="standardPpname != null" >
+        standard_ppname,
+      </if>
+      <if test="pId != null" >
+        p_id,
+      </if>
+      <if test="classHierarchy != null" >
+        class_hierarchy,
+      </if>
+      <if test="storeId != null" >
+        store_id,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="pp != null" >
+        #{pp,jdbcType=VARCHAR},
+      </if>
+      <if test="standardPpname != null" >
+        #{standardPpname,jdbcType=VARCHAR},
+      </if>
+      <if test="pId != null" >
+        #{pId,jdbcType=VARCHAR},
+      </if>
+      <if test="classHierarchy != null" >
+        #{classHierarchy,jdbcType=INTEGER},
+      </if>
+      <if test="storeId != null" >
+        #{storeId,jdbcType=VARCHAR}
+      </if>
+    </trim>
+  </insert>
+
+  <!--统计查询-->
+  <select id="countByMap" resultType="java.lang.Integer" >
+    select count(*) from t_wfj_category
+  </select>
+
+  <sql id="Base_sql">
+    <if test="pp != null" >
+      pp = #{pp,jdbcType=VARCHAR}
+    </if>
+    <if test="standardPpname != null" >
+      AND standard_ppname = #{standardPpname,jdbcType=VARCHAR}
+    </if>
+    <if test="pId != null" >
+      AND p_id = #{pId,jdbcType=VARCHAR}
+    </if>
+    <if test="classHierarchy != null" >
+      AND class_hierarchy = #{classHierarchy,jdbcType=INTEGER}
+    </if>
+    <if test="storeId != null" >
+      AND store_id = #{storeId,jdbcType=VARCHAR}
+    </if>
+  </sql>
+
+  <!--根据分类pp和门店表中的门店storeId查询分类名称-->
+  <select id="selectPpNameByPpAndStoreId" resultMap="BaseResultMap">
+    SELECT
+    <include refid="Base_Column_List"/>
+    FROM t_wfj_category
+    <where>
+      <if test="categoryId!=null and categoryId!=''">
+        AND pp = #{categoryId}
+      </if>
+      <if test="storeId!=null and storeId!=''">
+        AND store_id = #{storeId}
+      </if>
+    </where>
+    ORDER BY store_id ASC
+  </select>
+
+
+  <!--******************************** 以下是页面重构后的服务 ********************************-->
+
+  <!--基本元素-->
+  <sql id="Base_Column_List" >
+    pp, standard_ppname, p_id, class_hierarchy, store_id
+  </sql>
+
+  <!--根据门店ID查询对应的一级品类、品牌维度-->
+  <select id="selectCategorySelective" resultMap="BaseResultMap">
+    SELECT
+    <include refid="Base_Column_List"/>
+    FROM t_wfj_category
+    <where>
+      store_id in
+      <foreach collection="array" index="index" item="storeId" open="(" separator="," close=")">
+        #{storeId}
+      </foreach>
+      AND p_id IS NULL
+      AND class_hierarchy = 1
+    </where>
+    ORDER BY store_id ASC
+  </select>
+
+
+  <!--根据一级品类id查询对应的二级品类、品牌维度-->
+  <select id="selectCategoryByPid" parameterType="map" resultMap="BaseResultMap">
+    SELECT
+    <include refid="Base_Column_List"/>
+    FROM t_wfj_category
+    <where>
+      <if test="pid!=null and pid!=''">
+        AND p_id = #{pid}
+      </if>
+      <if test="brandName!=null and brandName!=''">
+        AND standard_ppname LIKE '%${brandName}%'
+      </if>
+      <if test="storesId!=null and storesId!=''">
+        AND store_id = #{storesId}
+      </if>
+      AND class_hierarchy = 2
+    </where>
+    ORDER BY store_id ASC
+  </select>
+</mapper>

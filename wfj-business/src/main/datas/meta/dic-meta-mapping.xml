@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapping PUBLIC "-//EXOLAB/Castor Mapping DTD Version 1.0//EN"
+                         "http://castor.exolab.org/mapping.dtd">
+<mapping>
+	<class name="com.wdzsj.mgr.castor.DicMetaData">
+		<map-to xml="DicMetaData"/>
+		<field name="dictList" type="com.wdzsj.mgr.entity.sys.Dict" collection="arraylist">
+   			<bind-xml name="Dict"/>
+   		</field>
+	</class>
+	
+	<class name="com.wdzsj.mgr.entity.sys.Dict">
+		<map-to xml="Dict"/>
+		<field name="id" type="java.lang.Long" required="true">
+   			<bind-xml name="id" node="attribute"/>
+   		</field>
+	    <field name="name" type="java.lang.String" required="true">
+   			<bind-xml name="name" node="attribute"/>
+   		</field>
+   		<field name="parId" type="java.lang.Long">
+   			<bind-xml name="parId" node="attribute"/>
+   		</field>
+   		<field name="code" type="java.lang.String">
+   			<bind-xml name="code" node="attribute"/>
+   		</field>
+	</class>
+	
+</mapping>

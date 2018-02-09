@@ -1,0 +1,52 @@
+.macrke-Wdate {
+    padding: 0 10px;
+    height: 28px;
+    border: 1px solid rgba(217, 217, 217, 1);
+    background-color: rgba(255, 255, 255, 1);
+    border-radius: 4px;
+    outline:none
+}
+
+@media screen and (min-width: 992px) and (min-width: 1200px) {
+    .creatime {
+        width: 25%;
+    }
+}
+.creatmarketing {
+    margin-top: 20px;
+}
+.creatbtn {
+    width: 137px;
+    height: 46px;
+    line-height: 30px;
+    cursor: pointer;
+    color: rgba(16, 141, 233, 1);
+    background: inherit;
+    border: 1px solid rgba(16, 141, 233, 1);
+    background-color: rgba(255, 255, 255, 0);
+    border-radius: 69px;
+    box-sizing: border-box;
+    font-weight: 400;
+    font-size: 14px;
+}
+.creatbtn:hover {
+    cursor: pointer;
+    background-color: #337ab7;
+    border-color: #2e6da4;
+}
+.table-hover thead tr{
+    height: 56px;
+    background-color: rgba(243, 243, 243, 1);
+}
+.table-hover tr td {
+    padding: 12px 0 !important;
+    background-color: #fff;
+    word-break:break-all; word-wrap:break-word; white-space:inherit;
+}
+.editcolor {
+    color: rgba(16, 141, 233, 1);
+    margin-left: 5px;
+}
+.editcolor:hover {
+    color: rgba(16, 141, 233, 1);
+}

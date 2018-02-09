@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
+"http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+
+
+<mapper namespace="com.wdzsj.mgr.dao.acl.UserRoleDao">
+
+	<resultMap id="UserRole" type="com.wdzsj.mgr.entity.acl.UserRole">
+        <result property="id" column="id"/>
+        <result property="userId" column="user_id"/>
+        <result property="roleId" column="role_id"/>
+        <result property="level" column="level"/>
+	</resultMap>
+	
+	<!-- 用于select查询公用抽取的列 -->
+	<sql id="columns">
+		id,user_id,role_id,level
+	</sql>
+
+	<insert id="insert" useGeneratedKeys="true" keyProperty="id">
+        insert into tacl_user_role (
+        	id ,
+        	user_id ,
+        	role_id ,
+        	level  
+        ) values (
+        	#{id} ,
+        	#{userId} ,
+        	#{roleId} ,
+        	#{level} 
+        )
+	</insert>
+    
+	<update id="update" >
+        update tacl_user_role set
+	        user_id = #{userId} ,
+	        role_id = #{roleId} ,
+	        level = #{level} 
+        where 
+	        id = #{id} 
+	</update>
+
+    <update id="delete">
+        update tacl_user_role set
+	        updt_tm = now() ,
+	        enab_flag = 0
+        where
+	        id = #{id}
+    </update>
+
+	<delete id="deleteByUserId">
+		delete from tacl_user_role
+		where
+		user_id = #{userId}
+	</delete>
+
+	<update id="deleteByUserIdAndRoleId">
+		update tacl_user_role set
+		updt_tm = now() ,
+		enab_flag = 0
+		where
+		user_id = #{userId}
+	    and role_id = #{roleId}
+	</update>
+    
+    <select id="getById" resultMap="UserRole">
+		select <include refid="columns" />
+		    from tacl_user_role 
+	        where 
+		        id = #{id} 
+	</select>
+	
+	<select id="findByRoleId" resultMap="UserRole">
+		select <include refid="columns" />
+		    from tacl_user_role 
+	        where 
+		        role_id = #{roleId} 
+	</select>
+
+	<select id="findRoleByUserId" resultType="json">
+		select
+		b.id ,
+		a.level ,
+		a.creat_tm as creatTm ,
+		b.name
+		from tacl_user_role a
+		left join tacl_role b on b.id = a.role_id
+		where
+		user_id = #{userId}
+		and a.enab_flag = 1
+	</select>
+
+	<select id="countByRoleAndUserId" resultType="Integer">
+		select count(id)
+		from tacl_user_role
+		where
+		user_id = #{userId}
+		and role_id = #{roleId}
+		and enab_flag = 1
+	</select>
+	
+	<sql id="findPageWhere">
+		<where>	    
+	       <if test="userId != null and userId != ''">
+				and user_id = #{userId}
+			</if>
+	       <if test="roleId != null and roleId != ''">
+				and role_id = #{roleId}
+			</if>
+	       <if test="level != null and level != ''">
+				and level = #{level}
+			</if>
+		</where>
+	</sql>
+		
+    <select id="count" resultType="Integer">
+        select count(*) from tacl_user_role 
+		<include refid="findPageWhere"/>    
+    </select>
+    
+    <select id="findList" resultMap="UserRole">
+    	select <include refid="columns" />
+	    from tacl_user_role 
+		<include refid="findPageWhere"/>
+    </select>
+
+</mapper>
+

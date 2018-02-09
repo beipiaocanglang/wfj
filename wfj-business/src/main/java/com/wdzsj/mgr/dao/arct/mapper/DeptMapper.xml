@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
+"http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd"> 
+<mapper namespace="com.wdzsj.mgr.dao.arct.DeptDao">
+	<resultMap id="Dept" type="com.wdzsj.mgr.entity.arct.Dept">
+	 <!-- id,    par_id,name,imag,seq,is_parent,      creat_tm updt_tm enab_flag -->    
+        <result property="id" column="id"/>
+        <result property="parId" column="par_id"/>
+        <result property="name" column="name"/>
+        <result property="imag" column="imag"/>
+        <result property="seq" column="seq"/>
+        <result property="isParent" column="is_parent"/>
+		<result property="creatTm" column="creat_tm"/>
+		<result property="updtTm" column="updt_tm"/>
+		<result property="enabFlag" column="enab_flag"/>
+	</resultMap>
+	
+	<!-- 用于select查询公用抽取的列 -->
+	<sql id="columns">
+		id,par_id,name,imag,seq,is_parent,creat_tm updt_tm enab_flag
+	</sql>
+   <!--  插入 -->
+	<insert id="insert" useGeneratedKeys="true" keyProperty="id">
+        insert into tarct_dept (        	
+        	id ,
+        	par_id,
+        	name,
+        	imag,
+        	seq,
+        	is_parent
+        ) values (        
+        	#{id} ,
+        	#{parId} ,
+        	#{name} ,
+        	#{imag} ,
+        	#{seq} ,
+        	0
+        )
+	</insert>
+    <!-- 根据ID更新 -->
+	<update id="update" >
+        update tarct_dept set
+        	name = #{name}
+        where 
+	        id = #{id} 
+	</update>
+	  <!-- 根据ID更新 -->
+	<update id="updateIsParent" >
+        update tarct_dept set
+        	is_parent = 1
+        where 
+	        id = #{id} 
+	</update>
+    <!-- 根据ID删除 -->
+    <update id="delete" >
+        update tarct_dept set
+	        enab_flag = 0
+        where 
+	        id = #{id} 
+	</update>
+	<!--  根据ParId和Name查询条数 -->
+    <select id="countByParIdAndName" resultType="Integer">
+        select count(id) 
+        from tarct_dept
+        where 
+        	par_id = #{parId} 
+        	and name = #{name}
+        	and enab_flag = 1
+    </select>	
+	<!--  根据ID查询条数 -->
+    <select id="countById" resultType="Integer">
+        select count(id) 
+        from tarct_dept
+        where 
+        	id = #{id}
+        	and enab_flag = 1
+    </select>	
+	<!-- 根据ID查询 -->
+    <select id="getById" resultMap="Dept">
+		select <include refid="columns" />
+		    from tarct_dept 
+	        where 
+		        id = #{id} 
+	</select>	
+	
+    <!-- 模糊查询的条件 -->
+	<sql id="findPageWhere">
+		<where>	      				
+	       <if test="name != null and name != ''">
+				and name like '%${name}%'
+			</if>
+			and enab_flag = 1
+		</where>
+	</sql>
+	<!-- 查询总条数	 -->
+    <select id="count" resultType="Integer">
+        select count(id) from tarct_dept 
+		<include refid="findPageWhere"/>    
+    </select>   
+ 	<!-- 查询分页显示 -->
+    <select id="findList" resultMap="Dept">
+    	select <include refid="columns" />
+	    from tarct_dept 
+		<include refid="findPageWhere"/>
+		order by id desc
+		limit ${offset}, ${pageSize}
+    </select>
+    <!--  查询根节点 -->
+    <select id="findRoot" resultType="json">     <!-- 查询的结果可以直接得到指定的类型 -->
+    	select id,par_id as pId,name,is_parent as isParent
+	    from tarct_dept 
+	    where enab_flag = 1 and par_id="0"
+    </select>
+    <!-- 根据ParId查询 子节点-->
+	<select id="findByParId" resultType="json">
+		select id,par_id as pId,name,is_parent as isParent
+		    from tarct_dept 
+		    where par_id = #{parId} and enab_flag = 1
+		    order by id
+	</select>
+</mapper>

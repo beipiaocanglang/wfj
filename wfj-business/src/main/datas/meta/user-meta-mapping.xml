@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapping PUBLIC "-//EXOLAB/Castor Mapping DTD Version 1.0//EN"  "http://castor.exolab.org/mapping.dtd">
+<mapping>
+	<class name="com.wdzsj.mgr.castor.UserMetaData">
+		<map-to xml="UserMetaData"/>
+		<field name="sysUserList" type="com.wdzsj.mgr.entity.acl.SysUser" collection="arraylist">
+   			<bind-xml name="SysUser"/>
+   		</field>
+   		<field name="roleList" type="com.wdzsj.mgr.entity.acl.Role" collection="arraylist">
+   			<bind-xml name="Role"/>
+   		</field>
+   		<field name="userRoleList" type="com.wdzsj.mgr.entity.acl.UserRole" collection="arraylist">
+   			<bind-xml name="UserRole"/>
+   		</field>
+   		<field name="mdulList" type="com.wdzsj.mgr.entity.acl.Mdul" collection="arraylist">
+   			<bind-xml name="Mdul"/>
+   		</field>
+   		<field name="funcList" type="com.wdzsj.mgr.entity.acl.Func" collection="arraylist">
+   			<bind-xml name="Func"/>
+   		</field>
+   		<field name="aclList" type="com.wdzsj.mgr.entity.acl.Acl" collection="arraylist">
+   			<bind-xml name="Acl"/>
+   		</field>
+	</class>
+	<class name="com.wdzsj.mgr.entity.acl.SysUser">
+		<map-to xml="SysUser"/>
+		<field name="id" type="java.lang.Long" required="true">
+   			<bind-xml name="id" node="attribute"/>
+   		</field>
+	    <field name="uname" type="java.lang.String" required="true">
+   			<bind-xml name="uname" node="attribute"/>
+   		</field>
+   		<field name="rname" type="java.lang.String" required="true">
+   			<bind-xml name="rname" node="attribute"/>
+   		</field>
+   		<field name="pswd" type="java.lang.String">
+   			<bind-xml name="pswd" node="attribute"/>
+   		</field>
+   		<field name="email" type="java.lang.String" required="true">
+   			<bind-xml name="email" node="attribute"/>
+   		</field>
+	</class>
+	<class name="com.wdzsj.mgr.entity.acl.Role">
+		<map-to xml="Role"/>
+		<field name="id" type="java.lang.Long" required="true">
+   			<bind-xml name="id" node="attribute"/>
+   		</field>
+	    <field name="name" type="java.lang.String" required="true">
+   			<bind-xml name="name" node="attribute"/>
+   		</field>
+   		<field name="code" type="java.lang.String">
+   			<bind-xml name="code" node="attribute"/>
+   		</field>
+	</class>
+	
+	<class name="com.wdzsj.mgr.entity.acl.UserRole">
+		<map-to xml="UserRole"/>
+		<field name="id" type="java.lang.Long" required="true">
+   			<bind-xml name="id" node="attribute"/>
+   		</field>
+	    <field name="userId" type="java.lang.Long" required="true">
+   			<bind-xml name="userId" node="attribute"/>
+   		</field>
+   		<field name="roleId" type="java.lang.Long">
+   			<bind-xml name="roleId" node="attribute"/>
+   		</field>
+	</class>
+	
+	<class name="com.wdzsj.mgr.entity.acl.Mdul">
+		<map-to xml="Mdul"/>
+		<field name="id" type="java.lang.Long" required="true">
+   			<bind-xml name="id" node="attribute"/>
+   		</field>
+	    <field name="parId" type="java.lang.Long" required="true">
+   			<bind-xml name="parId" node="attribute"/>
+   		</field>
+   		<field name="name" type="java.lang.String">
+   			<bind-xml name="name" node="attribute"/>
+   		</field>
+   		<field name="url" type="java.lang.String">
+   			<bind-xml name="url" node="attribute"/>
+   		</field>
+   		<field name="sn" type="java.lang.String">
+   			<bind-xml name="sn" node="attribute"/>
+   		</field>
+   		<field name="path" type="java.lang.String">
+   			<bind-xml name="path" node="attribute"/>
+   		</field>
+   		<field name="status" type="java.lang.Integer">
+   			<bind-xml name="status" node="attribute"/>
+   		</field>
+   		<field name="seq" type="java.lang.String">
+   			<bind-xml name="seq" node="attribute"/>
+   		</field>
+		<field name="system" type="java.lang.String">
+			<bind-xml name="system" node="attribute"/>
+		</field>
+		<field name="type" type="java.lang.Integer">
+			<bind-xml name="type" node="attribute"/>
+		</field>
+	</class>
+	
+	<class name="com.wdzsj.mgr.entity.acl.Func">
+		<map-to xml="Func"/>
+		<field name="id" type="java.lang.Long" required="true">
+   			<bind-xml name="id" node="attribute"/>
+   		</field>
+	    <field name="name" type="java.lang.String" required="true">
+   			<bind-xml name="name" node="attribute"/>
+   		</field>
+   		<field name="levels" type="java.lang.Integer">
+   			<bind-xml name="levels" node="attribute"/>
+   		</field>
+   		<field name="mdulId" type="java.lang.Long">
+   			<bind-xml name="mdulId" node="attribute"/>
+   		</field>
+   		<field name="url" type="java.lang.String">
+   			<bind-xml name="url" node="attribute"/>
+   		</field>
+	</class>
+	
+	<class name="com.wdzsj.mgr.entity.acl.Acl">
+		<map-to xml="Acl"/>
+		<field name="id" type="java.lang.Long" required="true">
+   			<bind-xml name="id" node="attribute"/>
+   		</field>
+	    <field name="prinType" type="java.lang.String" required="true">
+   			<bind-xml name="prinType" node="attribute"/>
+   		</field>
+   		<field name="prinId" type="java.lang.Long">
+   			<bind-xml name="prinId" node="attribute"/>
+   		</field>
+   		<field name="mdulId" type="java.lang.Long">
+   			<bind-xml name="mdulId" node="attribute"/>
+   		</field>
+   		<field name="aclstate" type="java.lang.Integer">
+   			<bind-xml name="aclstate" node="attribute"/>
+   		</field>
+   		<field name="acltristate" type="java.lang.Integer">
+   			<bind-xml name="acltristate" node="attribute"/>
+   		</field>
+	</class>
+	
+</mapping>

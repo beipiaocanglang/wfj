@@ -1,0 +1,400 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.wdzsj.mgr.dao.marketing.ActiveDao" >
+  <resultMap id="BaseResultMap" type="com.wdzsj.mgr.entity.marketing.Active" >
+    <id column="act_id" property="actId" jdbcType="BIGINT" />
+    <result column="theme" property="theme" jdbcType="VARCHAR" />
+    <result column="content" property="content" jdbcType="VARCHAR" />
+    <result column="store_id" property="storeId" jdbcType="VARCHAR" />
+    <result column="start_time" property="startTime" jdbcType="TIMESTAMP" />
+    <result column="end_time" property="endTime" jdbcType="TIMESTAMP" />
+    <result column="status" property="status" jdbcType="VARCHAR" />
+    <result column="channel_id" property="channelId" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="h5_url" property="h5Url" jdbcType="VARCHAR" />
+    <result column="attachment_id_import_file" property="attachmentIdImportFile" jdbcType="BIGINT" />
+    <result column="attachment_id_export_file" property="attachmentIdExportFile" jdbcType="BIGINT" />
+    <result column="attachment_id_qr_code" property="attachmentIdQrCode" jdbcType="LONGVARBINARY" />
+    <result column="seed_num" property="seedNum" jdbcType="VARCHAR" />
+  </resultMap>
+
+  <resultMap id="ActiveVo" type="com.wdzsj.mgr.entity.marketing.vo.ActiveVo" extends="BaseResultMap">
+    <id column="kdActId" property="kdActId" jdbcType="BIGINT" />
+    <result column="kpaType" property="kpaType" jdbcType="VARCHAR" />
+    <result column="kpiValue" property="kpiValue" jdbcType="VARCHAR" />
+    <result column="upToStandard" property="upToStandard" jdbcType="VARCHAR" />
+  </resultMap>
+
+  <resultMap id="EditActiveVo" type="com.wdzsj.mgr.entity.marketing.vo.EditActiveVo" extends="BaseResultMap">
+    <result column="attachment_id" property="attachmentId" jdbcType="BIGINT" />
+    <result column="attachment_content" property="attachmentContent" jdbcType="LONGVARBINARY" />
+    <result column="attachment_name" property="attachmentName" jdbcType="VARCHAR" />
+    <result column="attachment_type" property="attachmentType" jdbcType="VARCHAR" />
+    <result column="attachment_createtime" property="attachmentCreatetime" jdbcType="TIMESTAMP" />
+    <result column="attachment_updatetime" property="attachmentUpdatetime" jdbcType="TIMESTAMP" />
+    <result column="file_url" property="fileUrl" jdbcType="VARCHAR" />
+  </resultMap>
+
+  <!--编辑活动时  根据活动表的id查询 kpi表 和 附件表-->
+  <resultMap id="EditActiveAndKpiVo" type="com.wdzsj.mgr.entity.marketing.vo.EditActiveAndKpiVo" extends="EditActiveVo">
+    <result column="act_id" property="kdActId" jdbcType="BIGINT" />
+    <result column="kpi_type" property="kpiType" jdbcType="VARCHAR" />
+    <result column="kpi_value" property="kpiValue" jdbcType="VARCHAR" />
+    <result column="up_to_standard" property="upToStandard" jdbcType="VARCHAR" />
+  </resultMap>
+
+  <!--编辑活动时  根据活动表的id查询 活动标签关联表 和 附件表-->
+  <resultMap id="ActiveSeedVo" type="com.wdzsj.mgr.entity.marketing.vo.ActiveSeedVo" extends="EditActiveVo">
+    <result column="act_id" property="seedActId" jdbcType="BIGINT" />
+    <result column="tag_data_id" property="tagDataId" jdbcType="BIGINT" />
+    <result column="tag_data" property="tagData" />
+    <result column="seed_category_data" property="seedCategoryData" />
+  </resultMap>
+
+  <!--创建活动时 可以编辑的活动sql-->
+  <resultMap id="CreateEditActiveVo" type="com.wdzsj.mgr.entity.marketing.vo.CreateEditActiveVo" extends="EditActiveAndKpiVo">
+    <result column="attachment_id" property="importAttachmentId" jdbcType="BIGINT" />
+    <result column="attachment_content" property="importAttachmentContent" jdbcType="LONGVARBINARY" />
+    <result column="attachment_name" property="importAttachmentName" jdbcType="VARCHAR" />
+    <result column="attachment_type" property="importAttachmentType" jdbcType="VARCHAR" />
+    <result column="attachment_createtime" property="importAttachmentCreatetime" jdbcType="TIMESTAMP" />
+    <result column="attachment_updatetime" property="importAttachmentUpdatetime" jdbcType="TIMESTAMP" />
+    <result column="file_url" property="importFileUrl" jdbcType="VARCHAR" />
+  </resultMap>
+
+  <!--基本元素-->
+  <sql id="Base_Column_List" >
+    act_id, theme, content, store_id, start_time, end_time, status, channel_id, create_time, 
+    update_time, h5_url, attachment_id_import_file, attachment_id_export_file, attachment_id_qr_code, seed_num
+  </sql>
+
+  <!--根据主键查询-->
+  <select id="selectByPrimaryKey" resultMap="ActiveVo">
+    SELECT
+    a.act_id ,
+    a.theme ,
+    a.content ,
+    a.store_id ,
+    a.start_time ,
+    a.end_time ,
+    a.STATUS ,
+    a.channel_id ,
+    a.create_time ,
+    a.update_time ,
+    a.h5_url ,
+    a.attachment_id_import_file ,
+    a.attachment_id_export_file ,
+    a.attachment_id_qr_code ,
+    a.seed_num,
+    kd.act_id kdActId ,
+    kd.kpi_type kpaType ,
+    kd.kpi_value kpiValue ,
+    kd.up_to_standard upToStandard
+    FROM
+    t_wfj_active a
+    LEFT JOIN t_wfj_kpi_detail kd ON a.act_id = kd.act_id
+    where a.act_id = #{id}
+  </select>
+
+  <!--编辑活动数据时  根据活动表的主键查询 活动表 kpi表 附件表数据 -->
+  <select id="selectEditActiveDataByActId" resultMap="EditActiveAndKpiVo">
+    SELECT
+      active.*,
+      kpi.act_id kdActId,
+      kpi.kpi_type,
+      kpi.kpi_value,
+      kpi.up_to_standard,
+      attachment.attachment_id,
+      attachment.attachment_content,
+      attachment.attachment_name,
+      attachment.attachment_type,
+      attachment.attachment_createtime,
+      attachment.attachment_updatetime,
+      attachment.file_url
+    FROM
+      t_wfj_active active
+    LEFT JOIN t_wfj_kpi_detail kpi on active.act_id = kpi.act_id
+    LEFT JOIN t_wfj_attachment attachment on active.attachment_id_qr_code = attachment.attachment_id
+    WHERE
+      active.act_id = #{id}
+  </select>
+
+  <!--没用-->
+  <!--编辑活动数据时  根据活动表的主键查询 活动表 活动标签关联 附件表数据 -->
+  <select id="selectEditActiveSeedByActId" resultMap="ActiveSeedVo">
+    SELECT
+    active.*,
+    twatr.act_id seedActId,
+    twatr.seed_category_data,
+    twatr.tag_data,
+    twatr.tag_data_id,
+    attachment.*
+    FROM
+    t_wfj_active active
+    LEFT JOIN t_wfj_active_tag_relation twatr on active.act_id = twatr.act_id
+    LEFT JOIN t_wfj_attachment attachment on active.attachment_id_import_file = attachment.attachment_id
+    WHERE
+    active.act_id = #{id}
+  </select>
+
+  <!--编辑活动数据时  根据活动表的主键查询 活动表 kpi表 附件表数据 活动标签关联表-->
+  <select id="selectCreateEditActiveDataByActId" resultMap="CreateEditActiveVo">
+    SELECT
+      active.*,
+      kpi.act_id kdActId,
+      kpi.kpi_type,
+      kpi.kpi_value,
+      kpi.up_to_standard,
+      relation.act_id seedActId,
+      relation.tag_data_id,
+      relation.tag_data,
+      relation.seed_category_data,
+      attachment.attachment_id attachmentId,
+      attachment.attachment_content attachmentContent,
+      attachment.attachment_name attachmentName,
+      attachment.attachment_type attachmentType,
+      attachment.attachment_createtime attachmentCreatetime,
+      attachment.attachment_updatetime attachmentUpdatetime,
+      attachment.file_url fileUrl,
+      attachment1.attachment_id importAttachmentId,
+      attachment1.attachment_content importAttachmentContent,
+      attachment1.attachment_name importAttachmentName,
+      attachment1.attachment_type importAttachmentType,
+      attachment1.attachment_createtime importAttachmentCreatetime,
+      attachment1.attachment_updatetime importAttachmentUpdatetime,
+      attachment1.file_url importFileUrl
+    FROM t_wfj_active active
+      LEFT JOIN  t_wfj_kpi_detail kpi ON active.act_id=kpi.act_id
+      LEFT JOIN t_wfj_active_tag_relation relation ON active.act_id=relation.act_id
+      LEFT JOIN t_wfj_attachment attachment1 ON active.attachment_id_import_file=attachment1.attachment_id
+      LEFT JOIN t_wfj_attachment attachment ON active.attachment_id_qr_code=attachment.attachment_id
+    WHERE
+      active.act_id = #{actId}
+  </select>
+
+  <!--全部插入-->
+  <insert id="insert" parameterType="com.wdzsj.mgr.entity.marketing.Active" >
+    insert into t_wfj_active (act_id, theme, content, 
+      store_id, start_time, end_time, 
+      status, channel_id, create_time, 
+      update_time, h5_url, attachment_id_import_file, 
+      attachment_id_export_file, attachment_id_qr_code, seed_num
+      )
+    values (#{actId,jdbcType=BIGINT}, #{theme,jdbcType=VARCHAR}, #{content,jdbcType=VARCHAR}, 
+      #{storeId,jdbcType=VARCHAR}, #{startTime,jdbcType=TIMESTAMP}, #{endTime,jdbcType=TIMESTAMP}, 
+      #{status,jdbcType=VARCHAR}, #{channelId,jdbcType=BIGINT}, #{createTime,jdbcType=TIMESTAMP}, 
+      #{updateTime,jdbcType=TIMESTAMP}, #{h5Url,jdbcType=VARCHAR}, #{attachmentIdImportFile,jdbcType=BIGINT}, 
+      #{attachmentIdExportFile,jdbcType=BIGINT}, #{attachmentIdQrCode,jdbcType=LONGVARBINARY},
+      #{seedNum,jdbcType=VARCHAR}
+      )
+  </insert>
+
+  <!--动态插入-->
+  <insert id="insertSelective" useGeneratedKeys="true" keyProperty="actId" parameterType="com.wdzsj.mgr.entity.marketing.Active" >
+    insert into t_wfj_active
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="actId != null" >
+        act_id,
+      </if>
+      <if test="theme != null" >
+        theme,
+      </if>
+      <if test="content != null" >
+        content,
+      </if>
+      <if test="storeId != null" >
+        store_id,
+      </if>
+      <if test="startTime != null" >
+        start_time,
+      </if>
+      <if test="endTime != null" >
+        end_time,
+      </if>
+      <if test="status != null" >
+        status,
+      </if>
+      <if test="channelId != null" >
+        channel_id,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+      <if test="h5Url != null" >
+        h5_url,
+      </if>
+      <if test="attachmentIdImportFile != null" >
+        attachment_id_import_file,
+      </if>
+      <if test="attachmentIdExportFile != null" >
+        attachment_id_export_file,
+      </if>
+      <if test="attachmentIdQrCode != null" >
+        attachment_id_qr_code,
+      </if>
+      <if test="seedNum != null" >
+        seed_num,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="actId != null" >
+        #{actId,jdbcType=BIGINT},
+      </if>
+      <if test="theme != null" >
+        #{theme,jdbcType=VARCHAR},
+      </if>
+      <if test="content != null" >
+        #{content,jdbcType=VARCHAR},
+      </if>
+      <if test="storeId != null" >
+        #{storeId,jdbcType=VARCHAR},
+      </if>
+      <if test="startTime != null" >
+        #{startTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="endTime != null" >
+        #{endTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=VARCHAR},
+      </if>
+      <if test="channelId != null" >
+        #{channelId,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="h5Url != null" >
+        #{h5Url,jdbcType=VARCHAR},
+      </if>
+      <if test="attachmentIdImportFile != null" >
+        #{attachmentIdImportFile,jdbcType=BIGINT},
+      </if>
+      <if test="attachmentIdExportFile != null" >
+        #{attachmentIdExportFile,jdbcType=BIGINT},
+      </if>
+      <if test="attachmentIdQrCode != null" >
+        #{attachmentIdQrCode,jdbcType=LONGVARBINARY},
+      </if>
+      <if test="seedNum != null" >
+        #{seedNum,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+
+  <!--统计查询-->
+  <select id="count" resultType="java.lang.Integer" >
+    select count(*)
+    from t_wfj_active
+    <include refid="activeHomePage"/>
+  </select>
+
+  <!--根据主键动态更新-->
+  <update id="updateByPrimaryKeySelective" parameterType="com.wdzsj.mgr.entity.marketing.Active" >
+    update t_wfj_active
+    <set >
+      <if test="theme != null" >
+        theme = #{theme,jdbcType=VARCHAR},
+      </if>
+      <if test="content != null" >
+        content = #{content,jdbcType=VARCHAR},
+      </if>
+      <if test="storeId != null" >
+        store_id = #{storeId,jdbcType=VARCHAR},
+      </if>
+      <if test="startTime != null" >
+        start_time = #{startTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="endTime != null" >
+        end_time = #{endTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="status != null" >
+        status = #{status,jdbcType=VARCHAR},
+      </if>
+      <if test="channelId != null" >
+        channel_id = #{channelId,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="h5Url != null" >
+        h5_url = #{h5Url,jdbcType=VARCHAR},
+      </if>
+      <if test="attachmentIdImportFile != null" >
+        attachment_id_import_file = #{attachmentIdImportFile,jdbcType=BIGINT},
+      </if>
+      <if test="attachmentIdExportFile != null" >
+        attachment_id_export_file = #{attachmentIdExportFile,jdbcType=BIGINT},
+      </if>
+      <if test="attachmentIdQrCode != null" >
+        attachment_id_qr_code = #{attachmentIdQrCode,jdbcType=LONGVARBINARY},
+      </if>
+      <if test="seedNum != null" >
+        seed_num = #{seedNum,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where act_id = #{actId,jdbcType=BIGINT}
+  </update>
+
+
+
+  <!-- ******************************** 以下是页面重构后的服务 ******************************** -->
+
+  <!--营销活动首页列表数据获取的条件-->
+  <sql id="activeHomePage">
+    <where>
+      <if test="theme!=null and theme!=''">
+        theme=#{theme}
+      </if>
+      <if test="startDate!=null and startDate!=''">
+        <![CDATA[and start_time>=#{startDate}]]>
+      </if>
+      <if test="endDate!=null and endDate!=''">
+        <![CDATA[and end_time<=#{endDate}]]>
+      </if>
+      <if test="creatTime!=null and creatTime!=''">
+        and create_time=#{creatTime}
+      </if>
+    </where>
+  </sql>
+
+  <!-- 分页查询所有 -->
+  <select id="findList" resultMap="ActiveVo">
+    SELECT
+      a.act_id ,
+      a.theme ,
+      a.content ,
+      a.store_id ,
+      a.start_time ,
+      a.end_time ,
+      a.STATUS ,
+      a.channel_id ,
+      a.create_time ,
+      a.update_time ,
+      a.h5_url ,
+      a.attachment_id_import_file ,
+      a.attachment_id_export_file ,
+      a.attachment_id_qr_code ,
+      a.seed_num,
+      kd.act_id kdActId ,
+      kd.kpi_type kpaType ,
+      kd.kpi_value kpiValue ,
+      kd.up_to_standard upToStandard
+    FROM t_wfj_active a
+    LEFT JOIN t_wfj_kpi_detail kd ON a.act_id = kd.act_id
+    <include refid="activeHomePage"/>
+    ORDER BY
+      a.start_time DESC
+    limit ${offset}, ${pageSize}
+  </select>
+</mapper>

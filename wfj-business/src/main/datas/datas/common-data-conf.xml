@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Resources>
+	<!-- 种子数据 -->
+	<EntityResource dataType="seed" bizType="userLogin" enable="true" async="true">
+		<confLocation>/datas/seed/common-user-seed.xml</confLocation>
+		<confMappingLocation>/meta/user-meta-mapping.xml</confMappingLocation>
+		<implClazz>com.wdzsj.mgr.castor.UserDataCastor</implClazz>
+	</EntityResource>
+	
+	<EntityResource dataType="seed" bizType="dic" enable="true" async="true">
+		<confLocation>/datas/seed/common-dic-seed.xml</confLocation>
+		<confMappingLocation>/meta/dic-meta-mapping.xml</confMappingLocation>
+		<implClazz>com.wdzsj.mgr.castor.DicDataCastor</implClazz>
+	</EntityResource>
+	
+	<!-- 演示或测试数据 -->
+</Resources>
+

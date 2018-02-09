@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
+"http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+
+<mapper namespace="com.wdzsj.mgr.dao.acl.RoleDao">
+
+	<resultMap id="Role" type="com.wdzsj.mgr.entity.acl.Role">
+        <result property="id" column="id"/>
+        <result property="name" column="name"/>
+        <result property="code" column="code"/>
+        <result property="description" column="description"/>
+		<result property="creatTm" column="creat_tm"/>
+		<result property="updtTm" column="updt_tm"/>
+		<result property="enabFlag" column="enab_flag"/>
+	</resultMap>
+	
+	<!-- 用于select查询公用抽取的列 -->
+	<sql id="columns">
+		id,name,code,description,creat_tm,updt_tm,enab_flag
+	</sql>
+
+	<insert id="insert" useGeneratedKeys="true" keyProperty="id">
+        insert into tacl_role (
+        	id ,
+        	name ,
+        	code ,
+        	description 
+        ) values (
+        	#{id} ,
+        	#{name} ,
+        	#{code} ,
+        	#{description}  
+        )
+	</insert>
+    
+	<update id="update" >
+        update tacl_role set
+	        name = #{name} ,
+	        code = #{code} ,
+	        description = #{description} ,
+			creat_tm = #{creatTm} ,
+			updt_tm = #{updtTm} ,
+			enab_flag = #{enabFlag}
+        where 
+	        id = #{id} 
+	</update>
+
+    <update id="delete" >
+        update tacl_role set
+	        enab_flag = 0
+        where 
+	        id = #{id} 
+	</update>
+    
+    <select id="getById" resultMap="Role">
+		select <include refid="columns" />
+		    from tacl_role 
+	        where 
+		        id = #{id} 
+	</select>
+
+	<sql id="findPageWhere">
+		<where>	      				
+	       <if test="name != null and name != ''">
+				and name like '${name}%'
+			</if>
+	       <if test="code != null and code != ''">
+				and code = #{code}
+			</if>
+			and enab_flag = 1
+		</where>
+	</sql>
+		
+    <select id="count" resultType="Integer">
+        select count(id) from tacl_role 
+		<include refid="findPageWhere"/>    
+    </select>
+    
+    <select id="findList" resultMap="Role">
+    	select <include refid="columns" />
+	    from tacl_role 
+		<include refid="findPageWhere"/>
+		order by id desc
+		limit ${offset}, ${pageSize}
+    </select>
+    
+    <select id="findAll" resultMap="Role">
+    	select <include refid="columns" />
+	    from tacl_role 
+	    where enab_flag = 1
+    </select>
+
+</mapper>
+

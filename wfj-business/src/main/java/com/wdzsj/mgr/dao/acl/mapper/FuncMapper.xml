@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
+"http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+
+
+<mapper namespace="com.wdzsj.mgr.dao.acl.FuncDao">
+
+	<resultMap id="Func" type="com.wdzsj.mgr.entity.acl.Func">
+        <result property="id" column="id"/>
+        <result property="name" column="name"/>
+        <result property="levels" column="levels"/>
+        <result property="mdulId" column="mdul_id"/>
+        <result property="url" column="url"/>
+	</resultMap>
+	
+	<!-- 用于select查询公用抽取的列 -->
+	<sql id="columns">
+		id,name,levels,mdul_id,url
+	</sql>
+
+	<insert id="insert" useGeneratedKeys="true" keyProperty="id">
+        insert into tacl_func (
+        	id ,
+        	name ,
+        	levels ,
+        	mdul_id ,
+        	url 
+        ) values (
+        	#{id} ,
+        	#{name} ,
+        	#{levels} ,
+        	#{mdulId} ,
+        	#{url} 
+        )
+	</insert>
+    
+	<update id="update" >
+        update tacl_func set
+	        name = #{name} ,
+	        levels = #{levels} ,
+	        mdul_id = #{mdulId} ,
+	        url = #{url} 
+        where 
+	        id = #{id} 
+	</update>
+
+    <delete id="delete">
+        delete from tacl_func where
+        id = #{id} 
+    </delete>
+    
+    <select id="getById" resultMap="Func">
+		select <include refid="columns" />
+		    from tacl_func
+	        where 
+		        id = #{id} 
+	</select>
+
+	<select id="findByModuleid" resultMap="Func" >
+		select <include refid="columns" />
+			from tacl_func
+			where
+				mdul_id = #{id}
+	</select>
+	
+	<sql id="findPageWhere">
+		<where>	      				
+	       <if test="id != null and id != ''">
+				and id = #{id}
+			</if>
+	       <if test="name != null and name != ''">
+				and name = #{name}
+			</if>
+	       <if test="levels != null and levels != ''">
+				and levels = #{levels}
+			</if>
+	       <if test="mdulId != null and mdulId != ''">
+				and mdul_id = #{mdulId}
+			</if>
+		</where>
+	</sql>
+		
+    <select id="count" resultType="Integer">
+        select count(*) from tacl_func 
+		<include refid="findPageWhere"/>    
+    </select>
+    
+    <select id="findList" resultMap="Func">
+    	select <include refid="columns" />
+	    from tacl_func 
+		<include refid="findPageWhere"/>
+		<if test="sortColumns != null">
+			order by ${sortColumns}
+		</if>
+		limit ${offset}, ${pageSize}
+    </select>
+
+</mapper>
+

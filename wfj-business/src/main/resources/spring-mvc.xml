@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	   xmlns="http://www.springframework.org/schema/beans"
+	   xmlns:context="http://www.springframework.org/schema/context"
+	   xmlns:mvc="http://www.springframework.org/schema/mvc"
+	   xmlns:aop="http://www.springframework.org/schema/aop"
+	   xsi:schemaLocation="http://www.springframework.org/schema/beans
+	   					http://www.springframework.org/schema/beans/spring-beans.xsd
+						http://www.springframework.org/schema/context
+						http://www.springframework.org/schema/context/spring-context.xsd
+						http://www.springframework.org/schema/mvc
+						http://www.springframework.org/schema/mvc/spring-mvc.xsd
+						http://www.springframework.org/schema/aop
+						http://www.springframework.org/schema/aop/spring-aop.xsd">
+
+	<!-- 没有匹配上的url全部按默认方式（就是直接访问）访问，避免拦截静态资源 -->
+	<mvc:default-servlet-handler />
+
+	<!-- spring 扫描所有com.wdzsj.mgr.controller下文件 -->
+	<context:component-scan base-package="com.wdzsj.mgr" />
+
+	<!-- 开启mvc注解-->
+	<mvc:annotation-driven></mvc:annotation-driven>
+
+	<!--切入点是controller时需要再mvc中的配置-->
+	<!--<aop:aspectj-autoproxy proxy-target-class="true"/>-->
+
+	<mvc:resources location="/assets/" mapping="/assets/**" />
+	<mvc:resources mapping="/static/**" location="/static/" />
+	<mvc:resources location="/html/" mapping="/html/**" />
+	
+	<bean id="viewResolver"	class="org.springframework.web.servlet.view.freemarker.FreeMarkerViewResolver">
+		<property name="viewClass" value="org.springframework.web.servlet.view.freemarker.FreeMarkerView" />
+		<property name="prefix" value="" />
+		<property name="suffix" value=".ftl" />
+		<property name="contentType" value="text/html;charset=UTF-8" />
+		<property name="exposeSpringMacroHelpers" value="true" />
+		<property name="exposeRequestAttributes" value="true" />
+		<property name="exposeSessionAttributes" value="true" />
+		<property name="requestContextAttribute" value="request" />
+		<property name="cache" value="true" />
+		<property name="order" value="0" />
+	</bean>
+
+	<mvc:interceptors>
+		<mvc:interceptor>
+			<mvc:mapping path="/**" />
+			<mvc:exclude-mapping path="/acl/login"/>
+			<mvc:exclude-mapping path="/api/**"/>
+			<mvc:exclude-mapping path="/marketing/seed/simulationZhiSuanData"/>
+			<mvc:exclude-mapping path="/assets/**" />
+			<mvc:exclude-mapping path="/static/**" />
+			<mvc:exclude-mapping path="/html/**" />
+			<mvc:exclude-mapping path="/test/**" />
+			<bean class="com.wdzsj.mgr.intceptor.LoginIntceptor" />
+		</mvc:interceptor>
+	</mvc:interceptors>
+
+	<!-- 上传工具类 -->
+	<bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+		<property name="defaultEncoding" value="UTF-8" />
+		<property name="maxInMemorySize" value="102400" />
+		<property name="maxUploadSize" value="104857600" />
+	</bean>
+
+	<!-- Spring 统一日志处理   LogInterceptor拦截器 配置　-->
+	<bean id="logLnterceptor" class="com.wdzsj.mgr.intceptor.LogInterceptor"/>
+
+    <!-- 方法拦截器（拦截Controller包中的所有被RequestMapping注解的方法） MethodInterceptor -->
+    <aop:config proxy-target-class="true">
+        <!--<aop:pointcut id="controllerMethodPointcut" expression="execution(* com.wdzsj.mgr.controller.*.*.*(..)) and @annotation(org.springframework.web.bind.annotation.RequestMapping)"/>-->
+		<aop:pointcut id="serviceMethodPointcut" expression="execution(* com.wdzsj.mgr.service.*.*.*(..))"/>
+		<aop:advisor advice-ref="logLnterceptor" pointcut-ref="serviceMethodPointcut" />
+    </aop:config>
+
+	<bean id="_jacksonObjectMapper" class="com.wdzsj.mgr.castor.util.JacksonObjectMapperFactory"></bean>
+
+	<bean class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter">
+		<property name="messageConverters">
+			<list>
+				<bean class="org.springframework.http.converter.StringHttpMessageConverter">
+					<property name="writeAcceptCharset" value="false"/>
+					<property name="supportedMediaTypes">
+						<list>
+							<value>text/html;charset=utf-8</value>
+							<value>text/plain;charset=utf-8</value>
+						</list>
+					</property>
+				</bean>
+				<!--json转换工具-->
+				<bean class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter">
+					<property name="objectMapper" ref="_jacksonObjectMapper" />
+				</bean>
+			</list>
+		</property>
+	</bean>
+
+	<mvc:annotation-driven>
+		<mvc:message-converters register-defaults="true">
+			<!-- 避免IE执行AJAX时,返回JSON出现下载文件 -->
+			<bean id="fastJsonHttpMessageConverter" class="com.alibaba.fastjson.support.spring.FastJsonHttpMessageConverter">
+				<property name="supportedMediaTypes">
+					<list>
+						<value>application/json;charset=UTF-8</value>
+					</list>
+				</property>
+				<property name="features">
+					<list>
+						<value>WriteMapNullValue</value>
+						<value>WriteNullStringAsEmpty</value>
+						<value>WriteNullListAsEmpty</value>
+						<value>WriteNullBooleanAsFalse</value>
+						<value>WriteNullNumberAsZero</value>
+						<value>WriteDateUseDateFormat</value>
+					</list>
+				</property>
+			</bean>
+		</mvc:message-converters>
+	</mvc:annotation-driven>
+
+	<!-- spring view过滤 -->
+	<bean id="pageResolver" class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+		<property name="viewClass" value="org.springframework.web.servlet.view.JstlView" />
+		<property name="prefix" value="/WEB-INF/pages/" />
+		<property name="suffix" value=".jsp" />
+		<property name="order" value="1" />
+	</bean>
+
+</beans>

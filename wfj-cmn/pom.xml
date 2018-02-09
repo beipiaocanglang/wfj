@@ -1,0 +1,50 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <!-- 继承父类 -->
+    <parent>
+        <groupId>wfj</groupId>
+        <artifactId>wfj-parent</artifactId>
+        <version>0.0.1-SNAPSHOT</version>
+        <!-- 设置父类的绝对路径 -->
+        <relativePath>../wfj-parent/pom.xml</relativePath>
+    </parent>
+
+    <artifactId>wfj-cmn</artifactId>
+    <packaging>jar</packaging>
+    <name>wfj-cmn</name>
+    <url>http://maven.apache.org</url>
+
+    <dependencies>
+	   <dependency>  
+		    <groupId>net.sourceforge.javacsv</groupId>  
+		    <artifactId>javacsv</artifactId>  
+		    <version>2.0</version>  
+		</dependency>  
+		<dependency>
+		    <groupId>org.apache.ant</groupId>
+		    <artifactId>ant</artifactId>
+		    <version>1.9.7</version>
+		</dependency>
+		<!-- habse -->
+		<!--<dependency>
+			<groupId>org.apache.hbase</groupId>
+			<artifactId>hbase-client</artifactId>
+			<version>1.1.2</version>
+		</dependency>
+     	<dependency>
+            <groupId>org.apache.hbase</groupId>
+            <artifactId>hbase-examples</artifactId>
+            <version>1.1.2</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.hadoop</groupId>
+            <artifactId>hadoop-hdfs</artifactId>
+            <version> 2.7.1</version>
+        </dependency> -->
+        </dependencies>
+    <build>
+        <finalName>wfj-cmn</finalName>
+    </build>
+</project>

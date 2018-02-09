@@ -1,0 +1,325 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
+		"http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.wdzsj.mgr.dao.ttr.CheckTotalDataDao">
+
+	<resultMap id="CardActivation" type="com.wdzsj.mgr.entity.ttr.CardActivation">
+		<result property="id" column="id"/>
+        <result property="orderId" column="orderId"/>
+        <result property="transId" column="transId"/>
+        <result property="payFinishTime" column="payFinishTime"/>
+        <result property="totalPrice" column="totalPrice"/>
+        <result property="openid" column="openid"/>
+        <result property="unionid" column="unionid"/>
+        <result property="corpUserId" column="corpUserId"/>
+        <result property="phoneNo" column="phoneNo"/>
+        <result property="isChatRoom" column="isChatRoom"/>
+        <result property="cardId" column="cardId"/>
+        <result property="price" column="price"/>
+        <result property="cardCode" column="cardCode"/>
+	</resultMap>
+
+    <resultMap id="findListVO" type="com.wdzsj.mgr.entity.ttr.TotalTableVo" extends="CardActivation">
+        <result property="payTime" column="payTime"/>
+        <result property="code" column="code"/>
+        <result property="activeCardPrice" column="activeCardPrice"/>
+        <result property="backCardPrice" column="backCardPrice"/>
+        <result property="diffAmount" column="diffAmount"/>
+    </resultMap>
+
+	<!--二级汇总报表导出时的对应关系-->
+	<resultMap id="findSecondLevelListVO" type="com.wdzsj.mgr.entity.ttr.SecondLevelTotalTableVo" extends="CardActivation">
+		<result property="isMakeInvoice" column="isMakeInvoice"/>
+	</resultMap>
+
+	<!--三级汇总报表导出时的对应关系-->
+	<resultMap id="cardActiveVo" type="com.wdzsj.mgr.entity.ttr.CardActiveVo" extends="CardActivation">
+		<result property="totalNum" column="totalNum"/>
+	</resultMap>
+
+	<!-- 用于select查询公用抽取的列 -->
+	<sql id="columns">
+		id,orderId,transId,DATE_FORMAT(payFinishTime , '%Y-%m-%d') AS payFinishTime,totalPrice,openid,unionid,corpUserId,phoneNo,isChatRoom,cardId,price,cardCode
+	</sql>
+
+	<sql id="countWhere">
+		<where>
+			<if test="payFinishTime!=null and payFinishTime!=''">
+				<![CDATA[and payFinishTime = #{payFinishTime}]]>
+			</if>
+			<if test="startDate!=null and startDate!=''">
+				<![CDATA[and payFinishTime >= #{startDate}]]>
+			</if>
+			<if test="endDate!=null and endDate!=''">
+				<![CDATA[and payFinishTime <= #{endDate}]]>
+			</if>
+			<if test="price!=null and price!=''">
+				and price=${price}
+			</if>
+			<if test="transId!=null and transId!=''">
+				and transId=${transId}
+			</if>
+		</where>
+	</sql>
+
+	<insert id="insert" useGeneratedKeys="true" keyProperty="id">
+        insert into tcac_card_activation(
+        	orderId,
+        	transId,
+        	payFinishTime,
+        	totalPrice,
+        	openid,
+        	unionid,
+        	corpUserId,
+        	phoneNo,
+        	isChatRoom,
+        	cardId,
+        	price,
+        	cardCode
+        ) values (
+        	#{orderId} ,
+        	#{transId} ,
+        	#{payFinishTime} ,
+        	#{totalPrice} ,
+        	#{openid} ,
+        	#{unionid} ,
+        	#{corpUserId} ,
+        	#{phoneNo} ,
+        	#{isChatRoom} ,
+        	#{cardId} ,
+        	#{price} ,
+        	#{cardCode}
+        )
+	</insert>
+    
+	<update id="update" >
+        update tcac_card_activation set
+        	transId = #{transId} ,
+        	payFinishTime = #{payFinishTime} ,
+        	totalPrice = #{totalPrice} ,
+        	openid = #{openid} ,
+        	unionid = #{unionid} ,
+        	corpUserId = #{corpUserId} ,
+        	phoneNo = #{phoneNo} ,
+        	isChatRoom = #{isChatRoom} ,
+        	cardId = #{cardId} ,
+        	price = #{price} ,
+        	cardCode = #{cardCode}
+        where 
+        	id = #{id}
+	</update>
+
+    <update id="delete">
+    	delete 
+    	from
+    		tcac_card_activation
+        where 
+        	id = #{id}
+    </update>
+    
+    <select id="getById" resultMap="CardActivation">
+		select
+			<include refid="columns" />
+		from
+			tcac_card_activation
+		where
+		    id = #{id}
+	</select>
+	
+	<sql id="findPageWhere">
+		<where>
+			<if test="orderId != null and orderId != ''">
+				and orderId = #{orderId}
+			</if>
+			<if test="transId != null and transId != ''">
+				and transId = #{transId}
+			</if>
+			<if test="payFinishTime != null and payFinishTime != ''">
+				and payFinishTime = #{payFinishTime}
+			</if>
+			<if test="totalPrice != null and totalPrice != ''">
+				and totalPrice = #{totalPrice}
+			</if>
+			<if test="openid != null and openid != ''">
+				and openid = #{openid}
+			</if>
+			<if test="unionid != null and unionid != ''">
+				and unionid = #{unionid}
+			</if>
+			<if test="corpUserId != null and corpUserId != ''">
+				and corpUserId = #{corpUserId}
+			</if>
+			<if test="phoneNo != null and phoneNo != ''">
+				and phoneNo = #{phoneNo}
+			</if>
+			<if test="isChatRoom != null and isChatRoom != ''">
+				and isChatRoom = #{isChatRoom}
+			</if>
+			<if test="cardId != null and cardId != ''">
+				and cardId = #{cardId}
+			</if>
+			<if test="price != null and price != ''">
+				and price = #{price}
+			</if>
+			<if test="cardCode != null and cardCode != ''">
+				and cardCode = #{cardCode}
+			</if>
+		</where>
+	</sql>
+
+	<select id="countAll" resultType="Integer">
+		select count(*)
+		from tcac_card_activation
+		<include refid="countWhere"/>
+	</select>
+
+	<!--查询购卡表cardCode=退卡表cardCode的数据-->
+    <select id="findActiveCardList" resultMap="findListVO">
+        select
+            DATE_FORMAT(payFinishTime , '%Y-%m-%d') payTime,
+			SUM(totalPrice) activeCardPrice
+		FROM
+			tcac_card_activation
+			<include refid="countWhere"/>
+		GROUP BY
+			DATE_FORMAT(payFinishTime , '%Y-%m-%d')
+		ORDER BY
+			payFinishTime ASC
+    </select>
+
+	<!--查询退卡表中的数据-->
+    <select id="findBackCardList" resultMap="findListVO">
+		select
+			DATE_FORMAT(payFinishTime , '%Y-%m-%d') payTime,
+			SUM(price) backCardPrice
+		FROM
+			tcac_back_card
+			<include refid="countWhere"/>
+		GROUP BY
+			DATE_FORMAT(payFinishTime , '%Y-%m-%d')
+		ORDER BY
+			payFinishTime ASC
+    </select>
+
+	<!--根据汇总的payFinishTime查询购卡表的数据-->
+	<select id="findTTRByPayFinishTime" resultMap="findSecondLevelListVO">
+		SELECT
+		<include refid="columns" />
+		FROM
+			tcac_card_activation
+		WHERE
+			payFinishTime=#{payFinishTime}
+		limit ${offset}, ${pageSize}
+	</select>
+
+	<!--二级汇总表的搜索-->
+	<select id="searchTTRByTime" resultMap="findSecondLevelListVO">
+		SELECT
+		<include refid="columns" />
+		,
+		(
+			select
+				count(*)
+			from
+				tcac_card_activation
+			<where>
+				<if test="startDate!=null and startDate!=''">
+					<![CDATA[and payFinishTime >= #{startDate}]]>
+				</if>
+				<if test="endDate!=null and endDate!=''">
+					<![CDATA[and payFinishTime <= #{endDate}]]>
+				</if>
+			</where>
+		) as totalNum
+		FROM
+			tcac_card_activation
+		<where>
+			<if test="startDate!=null and startDate!=''">
+				<![CDATA[and payFinishTime >= #{startDate}]]>
+			</if>
+			<if test="endDate!=null and endDate!=''">
+				<![CDATA[and payFinishTime <= #{endDate}]]>
+			</if>
+		</where>
+		limit ${offset}, ${pageSize}
+	</select>
+
+	<!--二级汇总表的导出-->
+	<select id="exportSecondLevelTTRByTime" resultMap="findSecondLevelListVO">
+		SELECT
+			<include refid="columns" />
+		FROM
+			tcac_card_activation
+		<where>
+			<if test="startDate!=null and startDate!=''">
+				<![CDATA[and payFinishTime >= #{startDate}]]>
+			</if>
+			<if test="endDate!=null and endDate!=''">
+				<![CDATA[and payFinishTime <= #{endDate}]]>
+			</if>
+		</where>
+	</select>
+
+	<!--根据二级汇总的transId查询购卡表的数据-->
+	<select id="findTTRByTransId" resultMap="cardActiveVo">
+		SELECT
+			<include refid="columns" />
+			,
+			(
+				select
+					count(*)
+				from
+					tcac_card_activation
+				WHERE
+					transId=#{transId}
+			) as totalNum
+		FROM
+			tcac_card_activation
+		WHERE
+			transId=#{transId}
+		limit ${offset}, ${pageSize}
+	</select>
+
+	<!--三级汇总表的搜索-->
+	<select id="searchTTRByPriceAndTransId" resultMap="cardActiveVo">
+		SELECT
+		<include refid="columns" />
+		,
+		(
+			select
+				count(*)
+			from
+				tcac_card_activation
+			<where>
+				<if test="price!=null and price!=''">
+					price=${price}
+				</if>
+				<if test="transId!=null and transId!=''">
+					AND transId=${transId}
+				</if>
+			</where>
+		) as totalNum
+		FROM
+			tcac_card_activation
+		<where>
+			<if test="price!=null and price!=''">
+				price=${price}
+			</if>
+			<if test="transId!=null and transId!=''">
+				AND transId=${transId}
+			</if>
+		</where>
+		limit ${offset}, ${pageSize}
+	</select>
+
+    <select id="findPage" resultMap="CardActivation">
+    	select
+			<include refid="columns" />
+	    from
+			tcac_card_activation
+		<include refid="findPageWhere"/>
+		order by
+			id desc
+    </select>
+</mapper>
+

@@ -1,0 +1,251 @@
+.wrapper-content .tabtoggle{
+    padding: 5px 45px;
+}
+.nav-tabs>li.active, .nav-tabs>li.active:hover, .nav-tabs>li>a, .nav-tabs>li>a:hover, .nav-tabs>li.active>a, .nav-tabs>li.active>a:hover{
+    border: none !important;
+    background: none;
+}
+.nav-tabs>li.active>a.fontcolor {
+    border-bottom: 2px solid rgba(16, 142, 233, 1) !important;
+    color: rgba(16, 142, 233, 1) !important;
+}
+
+/*活动计划*/
+.activity-list {
+    margin-top: 30px;
+}
+.activity-list .activi-title {
+    font-weight: 800;
+    font-size: 14px;
+}
+.activity-list .selectwrapper {
+    margin-left: 20px;
+}
+.selectwrapper::-webkit-input-placeholder{
+    color: rgba(16, 142, 233, 1);
+    font-size:12px;
+}
+.activity-list .acitvi-val {
+    width: 510px;
+    height: 27px;
+    line-height: 27px;
+    padding-left: 10px;
+    border-radius: 6px;
+    outline: none;
+    background-color: rgba(255, 255, 255, 1);
+    box-sizing: border-box;
+    border-width: 1px;
+    border-style: solid;
+    border-color: rgba(208, 214, 227, 1);
+    font-weight: 400;
+    font-style: normal;
+    cursor: pointer;
+}
+.range-window {
+    width: 300px;
+    height: 300px;
+    border: 1px solid red;
+}
+
+.activity-list .kpi-titlecontent {
+    margin-left: 16px;
+}
+
+.activity-list .kpi-title {
+    font-weight: 800;
+    font-size: 14px;
+    color: #666;
+}
+
+.kpitable {
+    margin: 25px 16px;
+    width: 1200px;
+    height: 151px;
+    background-color: rgba(255, 255, 255, 1);
+    box-sizing: border-box;
+    border-width: 1px;
+    border-style: solid;
+    border-color: rgba(233, 233, 233, 1);
+    border-radius: 6px;
+}
+
+.kpitable:after {
+    *zoom: 1;
+    clear: both;
+    display: inline-block;
+    content: " ";
+    visibility: hidden;
+}
+
+.kpitable .kpitabtitle-left {
+    float: left;
+    width: 135px;
+    height: 150px;
+    background-color: rgba(240, 244, 252, 1);
+    border: none;
+    border-right: 0px;
+    border-radius: 4px;
+}
+
+.kpitabtitle-rightcontent {
+
+}
+
+.kpi-select {
+    text-align: right;
+    margin-right: 10px;
+    height: 60px;
+    line-height: 60px;
+    color: #000;
+    border-bottom: 1px solid rgba(233, 233, 233, 1);
+}
+
+.kpitable .kpitabtitle-right {
+    float: left;
+    width: 1063px;
+}
+.kiphidden1,.kiphidden2,.kiphidden3 {
+    display: none;
+}
+.kipshow {
+    display: inline-block !important;
+}
+.kpi-selectlast:last-child {
+    border-bottom: none;
+}
+.kpitabtitle-rightcontent .kpi-select {
+    text-align: left;
+}
+.kpitabtitle-rightcontent .kpi-select .kipselect-tab {
+    margin-left: 10px;
+}
+.kpitabtitle-rightcontent .kpi-select .kipselect-tab .tabbtn {
+    display: inline-block;
+    width: 85px;
+    height: 26px;
+    color: rgba(16, 141, 233, 1);
+    text-align: center;
+    margin-left: 20px;
+    line-height: 26px;
+    background-color: rgb(255, 255, 255);
+    box-sizing: border-box;
+    border-width: 1px;
+    border-style: solid;
+    border-color: rgba(46, 155, 232, 1);
+    border-radius: 25px;
+    cursor: pointer;
+}
+.tabbtnactive {
+    color: rgb(255, 255, 255) !important;
+    background-color: rgba(16, 141, 233, 1) !important;
+    border-color: rgba(46, 155, 232, 1) !important;
+}
+
+.kpiselecttextval {
+    display: none;
+    margin-left: 40px;
+    font-size: 14px;
+    font-weight: 400;
+    color: #666666;
+}
+
+.kpiselectval {
+    width: 133px;
+    height: 27px;
+    line-height: 27px;
+}
+
+.textareaval {
+    width: 700px;
+    padding-top: 10px;
+    height: 50px;
+    padding-left: 10px;
+    border-radius: 6px;
+    color: #000;
+    outline: none;
+    background-color: rgba(255, 255, 255, 1);
+    border-width: 1px;
+    border-style: solid;
+    border-color: rgba(208, 214, 227, 1);
+    font-weight: 400;
+    font-style: normal;
+}
+
+.kepselectheight {
+    line-height: 15px;
+}
+.activitycontent {
+    height: 196px !important;
+}
+.activitycontent .kpitabtitle-left {
+    height: 194px !important;
+}
+
+.h5href {
+    width: 700px;
+    height: 27px;
+    margin: 17px;
+    padding-left: 10px;
+    border-radius: 6px;
+    outline: none;
+    background-color: rgba(255, 255, 255, 1);
+    box-sizing: border-box;
+    border-width: 1px;
+    border-style: solid;
+    border-color: rgba(208, 214, 227, 1);
+    font-weight: 400;
+    font-style: normal;
+}
+.erweima {
+    margin: 10px 15px;
+    cursor: pointer;
+}
+/*上传图片file* start*/
+.kpi-select .kipselect-tab .file-input{
+    line-height:30px;
+    position:relative;
+}
+.kpi-select .kipselect-tab .file-input .input-container{
+
+}
+.kpi-select .kipselect-tab .file-input input{
+    position:absolute;
+    left:0;
+    top: 12px;
+    opacity: 0;
+    height: 32px;
+    cursor:pointer;
+    font-size: 0;
+    width: 100px;
+}
+.kpi-select .kipselect-tab .file-input #name{
+    position:absolute;
+    left: 60px;
+    top: 12px;
+    font-size:12px;
+    color:#666;
+    padding-right: 30px;
+}
+#tishi {
+    position: absolute;
+    top: 35px;
+    left: 7px;
+    font-size: 10px;
+    color: #bbb;
+}
+.textval {
+    margin: 15px 25px;
+    line-height: 17px;
+    padding: 10px 15px;
+    width: 700px;
+    height: 46px;
+    border-radius: 6px;
+    outline: none;
+    background-color: rgba(255, 255, 255, 1);
+    box-sizing: border-box;
+    border-width: 1px;
+    border-style: solid;
+    border-color: rgba(208, 214, 227, 1);
+    font-weight: 400;
+    font-style: normal;
+}

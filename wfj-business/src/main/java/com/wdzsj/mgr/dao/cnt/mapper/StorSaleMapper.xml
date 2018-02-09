@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
+"http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+
+
+<mapper namespace="com.wdzsj.mgr.dao.cnt.StorSaleDao">
+
+	<resultMap id="StorSale" type="com.wdzsj.mgr.entity.cnt.StorSale">
+        <result property="id" column="id"/>
+        <result property="plazaId" column="plaza_id"/>
+        <result property="storId" column="stor_id"/>
+        <result property="saleVal" column="sale_val"/>
+        <result property="creatTm" column="creat_tm"/>
+        <result property="updtTm" column="updt_tm"/>
+        <result property="enabFlag" column="enab_flag"/>
+	</resultMap>
+	
+	<!-- 用于select查询公用抽取的列 -->
+	<sql id="columns">
+		id,plaza_id,stor_id,sale_val,creat_tm,updt_tm,enab_flag
+	</sql>
+
+	<sql id="findPageWhere">
+		<where>
+			and plaza_id in
+			<foreach collection="plazaIds" item="plazaId" open="(" close=")" separator=",">
+				#{plazaId}
+			</foreach>
+			<if test="creatTmBegin != null and creatTmBegin != ''">
+				and creat_tm >= #{creatTmBegin}
+			</if>
+			<if test="creatTmEnd != null and creatTmEnd != ''">
+				and creat_tm &lt;= #{creatTmEnd}
+			</if>
+		</where>
+	</sql>
+
+    <select id="findList" resultType="json">
+    	select
+		CAST(stor_id AS CHAR) as name ,
+		sum(sale_val) as value
+	    from tcnt_stor_sale
+		<include refid="findPageWhere"/>
+		group by stor_id
+		order by sale_val desc
+		limit 10
+    </select>
+
+	<select id="getTotalValue" resultType="Long">
+		select
+		sum(sale_val) as value
+		from tcnt_stor_sale
+		<include refid="findPageWhere"/>
+	</select>
+
+</mapper>
+

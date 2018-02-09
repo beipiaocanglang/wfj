@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
+		"http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+
+<mapper namespace="com.wdzsj.mgr.dao.acl.SysUserDao">
+
+	<resultMap id="SysUser" type="com.wdzsj.mgr.entity.acl.SysUser">
+		<result property="id" column="id"/>
+		<result property="uname" column="uname"/>
+		<result property="pswd" column="pswd"/>
+		<result property="rname" column="rname"/>
+		<result property="tel" column="tel"/>
+		<result property="headUrl" column="head_url"/>
+		<result property="email" column="email"/>
+		<result property="appId" column="app_id"/>
+		<result property="userCode" column="user_code"/>
+		<result property="jobName" column="job_name"/>
+		<result property="orgId" column="org_id"/>
+		<result property="orgName" column="org_name"/>
+		<result property="status" column="status"/>
+		<result property="creatTm" column="creat_tm"/>
+		<result property="updtTm" column="updt_tm"/>
+		<result property="enabFlag" column="enab_flag"/>
+	</resultMap>
+
+	<!-- 用于select查询公用抽取的列 -->
+	<sql id="columns">
+		id,uname,pswd,rname,tel,head_url,email,app_id,user_code,job_name,org_id,org_name,status,creat_tm,updt_tm,enab_flag
+	</sql>
+
+	<insert id="insert" useGeneratedKeys="true" keyProperty="id">
+        insert into tacl_sys_user (
+        	id ,
+        	uname ,
+        	pswd ,
+        	rname ,
+        	tel ,
+        	head_url ,
+        	email ,
+        	app_id ,
+        	user_code ,
+        	job_name ,
+        	org_id ,
+        	org_name
+        ) values (
+        	#{id} ,
+        	#{uname} ,
+        	#{pswd} ,
+        	#{rname} ,
+        	#{tel} ,
+        	#{headUrl} ,
+        	#{email} ,
+        	#{appId} ,
+        	#{userCode} ,
+        	#{jobName} ,
+        	#{orgId} ,
+        	#{orgName}
+        )
+	</insert>
+    
+	<update id="update" >
+        update tacl_sys_user set
+	        uname = #{uname} ,
+	        pswd = #{pswd} ,
+	        rname = #{rname} ,
+	        tel = #{tel} ,
+	        head_url = #{headUrl} ,
+	        email = #{email} ,
+	        app_id = #{appId} ,
+	        user_code = #{userCode} ,
+	        job_name = #{jobName} ,
+	        org_id = #{orgId} ,
+	        org_name = #{orgName} ,
+	        status = #{status} ,
+	        updt_tm = now()
+        where 
+	        id = #{id} 
+	</update>
+	
+    <update id="delete">
+        update tacl_sys_user set
+	        updt_tm = now() ,
+	        enab_flag = 0
+        where 
+        	id = #{id}
+    </update>
+    
+    <select id="getById" resultMap="SysUser">
+		select <include refid="columns" />
+		    from tacl_sys_user 
+	        where 
+		        id = #{id} 
+	</select>
+	
+	<select id="getByUserName" resultMap="SysUser">
+        select <include refid="columns" />
+            from tacl_sys_user 
+            where 
+                uname = #{uname} 
+    </select>
+
+	<select id="countByUserName" resultType="Integer">
+		select count(id) from tacl_sys_user
+		where uname = #{uname}
+		and enab_flag = 1
+	</select>
+	
+	<sql id="findPageWhere">
+		<where>	      				
+	       <if test="tel != null and tel != ''">
+				and tel = #{tel}
+			</if>
+	       <if test="uname != null and uname != ''">
+				and uname like '${uname}%'
+			</if>
+	       <if test="rname != null and rname != ''">
+				and rname like '${rname}%'
+			</if>
+			<if test="email != null and email != ''">
+				and email like '${email}%'
+			</if>
+			<if test="creatTmBegin != null and creatTmBegin != ''">
+				and creat_tm >= #{creatTmBegin}
+			</if>
+			<if test="creatTmEnd != null and creatTmEnd != ''">
+				and creat_tm &lt;= #{creatTmEnd}
+			</if>
+	       and enab_flag = 1
+		</where>
+	</sql>
+		
+    <select id="count" resultType="Integer">
+        select count(id) from tacl_sys_user
+		<include refid="findPageWhere"/>
+    </select>
+
+    <select id="findList" resultMap="SysUser">
+    	select <include refid="columns" />
+	    from tacl_sys_user
+		<include refid="findPageWhere"/>
+		order by id desc
+		limit ${offset}, ${pageSize}
+    </select>
+
+</mapper>
+

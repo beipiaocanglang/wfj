@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapping PUBLIC "-//EXOLAB/Castor Mapping DTD Version 1.0//EN"
+                         "http://castor.exolab.org/mapping.dtd">
+<mapping>
+	<class name="com.wdzsj.mgr.castor.util.Resources">
+		<map-to xml="Resources"/>
+		<field name="entityResourceList" type="com.wdzsj.mgr.castor.util.EntityResource" collection="arraylist">
+   			<bind-xml name="EntityResource"/>
+   		</field>
+	</class>
+	
+  	<class name="com.wdzsj.mgr.castor.util.EntityResource">
+	  	<map-to xml="EntityResource"/>
+	    <field name="dataType" type="java.lang.String" required="true">
+   			<bind-xml name="dataType" node="attribute"/>
+   		</field>
+   		<field name="bizType" type="java.lang.String" required="true">
+   			<bind-xml name="bizType" node="attribute"/>
+   		</field>
+   		<field name="enable" type="java.lang.Boolean" required="true">
+   			<bind-xml name="enable" node="attribute"/>
+   		</field>
+   		<field name="async" type="java.lang.Boolean">
+   			<bind-xml name="async" node="attribute"/>
+   		</field>
+   		<field name="confLocation" type="java.lang.String" required="true">
+   			<bind-xml name="confLocation" node="element"/>
+   		</field>
+   		<field name="confMappingLocation" type="java.lang.String" required="true">
+   			<bind-xml name="confMappingLocation" node="element"/>
+   		</field>
+   		<field name="implClazz" type="java.lang.String" required="true">
+   			<bind-xml name="implClazz" node="element"/>
+   		</field>
+  	</class>
+</mapping>

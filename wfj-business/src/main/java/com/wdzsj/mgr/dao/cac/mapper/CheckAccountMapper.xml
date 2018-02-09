@@ -1,0 +1,351 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
+		"http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.wdzsj.mgr.dao.cac.CheckAccountDao">
+	<resultMap id="CheckAccount" type="com.wdzsj.mgr.entity.cac.CheckAccountVo">
+        <result property="id" column="id"/>
+        <result property="appid" column="appid"/>
+        <result property="transid" column="transid"/>
+        <result property="code" column="code"/>
+        <result property="programid" column="programid"/>
+        <result property="num" column="num"/>
+        <result property="product" column="product"/>
+        <result property="transtime" column="transtime"/>
+        <result property="storeid" column="storeid"/>
+        <result property="storename" column="storename"/>
+        <result property="area" column="area"/>
+        <result property="posid" column="posid"/>
+        <result property="origprice" column="origprice"/>
+        <result property="saleprice" column="saleprice"/>
+        <result property="price" column="price"/>
+        <result property="cardnum" column="cardnum"/>
+        <result property="cardamount" column="cardamount"/>
+        <result property="expiretime" column="expiretime"/>
+        <result property="expired" column="expired"/>
+        <result property="cardstatus" column="cardstatus"/>
+        <result property="cardtype" column="cardtype"/>
+        <result property="openid" column="openid"/>
+        <result property="cardid" column="cardid"/>
+        <result property="cardcode" column="cardcode"/>
+	</resultMap>
+	<resultMap id="CheckAccountVo01" type="com.wdzsj.mgr.entity.cac.CheckAccountVo">
+		<result property="posid" column="posid"/>
+        <result property="jiaoyibishu" column="jiaoyibishu"/>
+        <result property="xiaofiejinge" column="xiaofiejinge"/>
+        <result property="tuihuojine" column="tuihuojine"/>
+        <result property="xiaofeiheji" column="xiaofeiheji"/>
+	</resultMap>
+
+	<resultMap id="CheckAccountVo02" type="com.wdzsj.mgr.entity.cac.CheckAccountDetailVo">
+		<result property="code" column="code"/>
+		<result property="transactionDate" column="transactionDate"/>
+		<result property="transactionNum" column="transactionNum"/>
+		<result property="transactionMoney" column="transactionMoney"/>
+	</resultMap>
+
+	<!-- 一级消费核对表返回的对象 -->
+	<resultMap id="consumeCheckVo" type="com.wdzsj.mgr.entity.cac.ConsumeCheckVo">
+		<result property="money" column="money"/>
+		<result property="consumeNum" column="consumeNum"/>
+		<result property="isBalance" column="isBalance"/>
+	</resultMap>
+
+	<!-- 二级消费核对表返回的对象 -->
+	<resultMap id="consumeCheckSecondLevelDetailVo" type="com.wdzsj.mgr.entity.cac.ConsumeCheckSecondLevelDetailVo">
+		<result property="amount" column="amount"/>
+		<result property="consumeNum" column="consumeNum"/>
+		<result property="diffAmount" column="diffAmount"/>
+		<result property="totalNum" column="totalNum"/>
+	</resultMap>
+
+	<!-- 三级消费核对表返回的对象 -->
+	<resultMap id="consumeCheckThreeLevelDetailVo" type="com.wdzsj.mgr.entity.cac.ConsumeCheckThreeLevelDetailVo">
+		<result property="amount" column="amount"/>
+		<result property="consumeNum" column="consumeNum"/>
+		<result property="isBalance" column="isBalance"/>
+		<result property="totaleCount" column="totaleCount"/>
+	</resultMap>
+
+	<!-- 用于select查询公用抽取的列 -->
+	<sql id="columns">
+		id,appid,transid,code,programid,num,product,transtime,storeid,storename,area,posid,origprice,saleprice,price,
+		cardnum,cardamount,expiretime,expired,cardstatus,cardtype,openid,cardid,cardcode
+	</sql>
+
+	<sql id="selectWhere">
+		<where>
+			<if test="startPosid!=null and startPosid!=''">
+				<![CDATA[and posid >=${startPosid}]]>
+			</if>
+			<if test="endPosid!=null and endPosid!=''">
+				<![CDATA[and posid <=${endPosid}]]>
+			</if>
+			<if test="startDate!=null and startDate!=''">
+				<![CDATA[and transtime >=#{startDate}]]>
+			</if>
+			<if test="endDate!=null and endDate!=''">
+				<![CDATA[and transtime <=#{endDate}]]>
+			</if>
+			<if test="storename!=null and storename!=''">
+				and storename=#{storename}
+			</if>
+			<if test="posid!=null and posid!=''">
+				and posid=${posid}
+			</if>
+		</where>
+	</sql>
+
+	<!--门店消费报表查询-首页数据的获取-->
+	<select id="findList" resultMap="CheckAccountVo01">
+		select
+			c.posid,
+			count(c.transid) as 'jiaoyibishu',
+			sum(case when <![CDATA[c.price > 0]]> then c.price else 0 end) as 'xiaofiejinge',
+			sum(case when <![CDATA[c.price < 0]]> then c.price else null end ) as 'tuihuojine',
+			sum(c.price) as 'xiaofeiheji'
+		from
+			tcac_check_account c
+			<include refid="selectWhere"/>
+		group by
+			c.posid
+		limit ${offset}, ${pageSize}
+	</select>
+
+	<!--门店消费一级报表导出数据-->
+	<select id="findCheckAccountVoByPosidAndTime02" parameterType="java.util.Map" resultMap="CheckAccountVo01">
+		select
+			c.posid,
+			count(c.transid) as 'jiaoyibishu',
+			sum(case when <![CDATA[c.price > 0]]> then c.price else 0 end) as 'xiaofiejinge',
+			sum(case when <![CDATA[c.price < 0]]> then c.price else null end ) as 'tuihuojine',
+			sum(c.price) as 'xiaofeiheji'
+		from
+			tcac_check_account c
+		<include refid="selectWhere"/>
+		group by
+			c.posid
+	</select>
+
+	<!--门店消费二级报表导出数据-->
+	<select id="findCheckAccountVoByPosidAndTime03" parameterType="java.util.Map" resultMap="CheckAccountVo02">
+		select
+			c.code,
+			c.transtime as transactionDate,
+			c.transid as transactionNum,
+			c.price as transactionMoney
+		from
+			tcac_check_account c
+        <where>
+            <if test="startPosid!=null and startPosid!=''">
+                <![CDATA[and posid = ${startPosid}]]>
+            </if>
+            <if test="startDate!=null and startDate!=''">
+                <![CDATA[and transtime >=#{startDate}]]>
+            </if>
+            <if test="endDate!=null and endDate!=''">
+                <![CDATA[and transtime <=#{endDate}]]>
+            </if>
+        </where>
+	</select>
+
+	<!--根据posid查询二级门店消费报表列表-->
+	<select id="findCheckAccountVoByPosid" parameterType="java.lang.String" resultMap="CheckAccount">
+		select
+			<include refid="columns" />
+		from
+			tcac_check_account
+		where
+			posid = ${posid}
+		limit ${offset}, ${pageSize}
+	</select>
+
+	<!--二级表报搜索-->
+	<select id="findCheckAccountVoByPosidAndTime" parameterType="java.util.Map" resultMap="CheckAccount">
+		select
+			<include refid="columns" />
+			,
+			(
+				select
+					count(*)
+				from
+					tcac_check_account
+				<where>
+					<if test="startPosid!=null and startPosid!=''">
+						<![CDATA[and posid=${startPosid}]]>
+					</if>
+					<if test="startDate!=null and startDate!=''">
+						<![CDATA[and transtime >=#{startDate}]]>
+					</if>
+					<if test="endDate!=null and endDate!=''">
+						<![CDATA[and transtime <=#{endDate}]]>
+					</if>
+				</where>
+			) as totalNum
+		from
+			tcac_check_account
+		<where>
+			<if test="startPosid!=null and startPosid!=''">
+				<![CDATA[and posid=${startPosid}]]>
+			</if>
+			<if test="startDate!=null and startDate!=''">
+				<![CDATA[and transtime >=#{startDate}]]>
+			</if>
+			<if test="endDate!=null and endDate!=''">
+				<![CDATA[and transtime <=#{endDate}]]>
+			</if>
+		</where>
+		limit ${offset}, ${pageSize}
+	</select>
+
+	<!--数量统计-->
+	<select id="count" resultType="Integer">
+         select
+			count( DISTINCT posid)
+		 from
+			tcac_check_account
+		<include refid="selectWhere"/>
+    </select>
+	<!--数量统计-->
+	<select id="countByPosId" resultType="Integer">
+		select
+		count(*)
+		from
+		tcac_check_account
+		<where>
+			<if test="posid!=null and posid!=''">
+				<![CDATA[posid = ${posid}]]>
+			</if>
+		</where>
+	</select>
+
+	<!--**************************以下是消费核对表的数据操作**************start************-->
+	<!-- 一级消费核对报表查询-首页数据的获取-->
+	<select id="findConsumeList" resultMap="consumeCheckVo">
+		select
+			posid,
+			transtime,
+			sum(price) as money,
+			(
+				select
+					count(DISTINCT transtime)
+				from
+					tcac_check_account
+				<include refid="selectWhere"/>
+			) as totalNum
+		from
+			tcac_check_account
+		<include refid="selectWhere"/>
+		group by
+			transtime
+		ORDER BY
+			transtime DESC
+		limit ${offset}, ${pageSize}
+	</select>
+
+	<!-- 一级消费核对报表导出-->
+	<select id="exportIndexExcel" resultMap="consumeCheckVo">
+		select
+			posid,
+			transtime,
+			sum(price) as money
+		from
+			tcac_check_account
+		<include refid="selectWhere"/>
+		group by
+			transtime
+		ORDER BY
+			transtime DESC
+	</select>
+
+	<!-- 二级消费核对报表查询-根据transtime获取列表数据-->
+	<select id="findCheckAccountVoByTransTime" resultMap="consumeCheckSecondLevelDetailVo">
+		select
+			posid,
+			storeid,
+			storename,
+			sum(price) as amount,
+			(
+				select
+					count(DISTINCT storeid)
+				from
+					tcac_check_account
+				<where>
+					<if test="transtime!=null and transtime!=''">
+						<![CDATA[transtime=#{transtime}]]>
+					</if>
+				</where>
+			) as totalNum
+		from
+			tcac_check_account
+		<where>
+			<if test="transtime!=null and transtime!=''">
+				<![CDATA[transtime=#{transtime}]]>
+			</if>
+		</where>
+		group by
+			storeid
+		ORDER BY
+			storeid DESC
+		limit ${offset}, ${pageSize}
+	</select>
+
+	<!-- 二级消费核对报表查询-根据transtime获取列表数据-->
+	<select id="findCheckAccountVoByTransTime1" resultMap="consumeCheckSecondLevelDetailVo">
+		select
+			posid,
+			storeid,
+			storename,
+			sum(price) as amount
+		from
+			tcac_check_account
+		<include refid="selectWhere"/>
+		group by
+			storeid
+		ORDER BY
+			storeid DESC
+		limit ${offset}, ${pageSize}
+	</select>
+
+	<!-- 三级消费核对报表查询-根据storename获取列表数据-->
+	<select id="findCheckAccountVoByStorename" resultMap="consumeCheckThreeLevelDetailVo">
+		select
+			transtime,
+			posid,
+			transid,
+			storeid,
+			storename,
+			sum(price) as amount,
+			(
+				SELECT
+					count(DISTINCT transtime)
+				FROM
+					tcac_check_account
+				<where>
+					<if test="storename!=null and storename!=''">
+						and storename=#{storename}
+					</if>
+					<if test="posid!=null and posid!=''">
+						and posid=${posid}
+					</if>
+				</where>
+			) as totaleCount
+		from
+			tcac_check_account
+		<where>
+			<if test="storename!=null and storename!=''">
+				and storename=#{storename}
+			</if>
+			<if test="posid!=null and posid!=''">
+				and posid=${posid}
+			</if>
+		</where>
+		group by
+			transtime
+		ORDER BY
+			posid DESC
+		limit ${offset}, ${pageSize}
+	</select>
+
+	<!--**************************以下是消费核对表的数据操作**************end************-->
+</mapper>
+
